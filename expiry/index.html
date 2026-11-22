@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>薅羊毛到期看板 · Freebie Expiry Tracker</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #fafafa; color: #1a1a1a; padding: 48px 20px 60px; }
+  .wrap { max-width: 860px; margin: 0 auto; }
+  header { margin-bottom: 28px; }
+  h1 { font-size: 1.9rem; margin-bottom: 4px; }
+  header p { color: #888; }
+  .back { display: inline-block; margin-bottom: 20px; color: #666; text-decoration: none; font-size: .92rem; }
+  .back:hover { color: #000; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; }
+  .card { background: #fff; border: 1px solid #e5e5e5; border-left: 5px solid #9ca3af; border-radius: 12px; padding: 18px 20px; }
+  .card.red { border-left-color: #dc2626; }
+  .card.yellow { border-left-color: #d97706; }
+  .card.green { border-left-color: #16a34a; }
+  .card.grey { border-left-color: #9ca3af; }
+  .card.banned { border-left-color: #dc2626; background: #fef2f2; border-color: #fecaca; }
+  .card h2 { font-size: 1.05rem; margin-bottom: 6px; }
+  .card .desc { color: #666; font-size: .93rem; line-height: 1.55; margin-bottom: 12px; }
+  .card .meta { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  .card .date { color: #888; font-size: .88rem; }
+  .card .days { font-weight: 700; font-size: .95rem; white-space: nowrap; }
+  .card.red .days, .card.banned .days { color: #dc2626; }
+  .card.yellow .days { color: #b45309; }
+  .card.green .days { color: #15803d; }
+  .card.grey .days { color: #6b7280; font-weight: 600; }
+  footer { margin-top: 36px; color: #bbb; font-size: .85rem; text-align: center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="../">← 回 Bagel AI</a>
+  <header>
+    <h1>薅羊毛到期看板</h1>
+    <p>Freebie Expiry Tracker · 剩余天数每天自动算</p>
+  </header>
+  <div class="grid" id="board"></div>
+  <footer>Bagel AI · 到期日以官方页面为准</footer>
+</div>
+<script>
+var items = [
+  { name: "SCNet 超算 Token 包", desc: "10,000,000 Token 新人包", date: "2026-12-10" },
+  { name: "Railway 4 个节点", desc: "免费试用节点（到期停用，不续费）", date: "2026-12-05", approx: true },
+  { name: "Caffeine Studio 免费月", desc: "2026-12-20 到期，之后 $25/月（自动充值已关）", date: "2026-12-20" },
+  { name: "X Plus 会员", desc: "$8/月，按月扣费", date: null },
+  { name: "Google Cloud $300 试用", desc: "$300 试用额度", date: "2027-02-03" },
+  { name: "InstaBox 免费机器", desc: "长期免费，闲置 30 分钟自动暂停", date: null },
+  { name: "Cloady 免费工作区", desc: "长期免费", date: null },
+  { name: "Google AI Pro（Jio）", desc: "已有", date: null },
+  { name: "Kaggle 账号", desc: "已封禁，不要再用", date: null, banned: true }
+];
+function dayDiff(d) {
+  var now = new Date(); now.setHours(0,0,0,0);
+  var t = new Date(d + "T00:00:00"); t.setHours(0,0,0,0);
+  return Math.round((t - now) / 86400000);
+}
+items.sort(function(a, b) {
+  if (a.banned) return 1; if (b.banned) return -1;
+  if (a.date && !b.date) return -1; if (!a.date && b.date) return 1;
+  if (a.date && b.date) return a.date < b.date ? -1 : 1;
+  return 0;
+});
+var board = document.getElementById("board");
+items.forEach(function(it) {
+  var card = document.createElement("div");
+  var dateText, daysText, cls;
+  if (it.banned) {
+    cls = "banned"; dateText = "已封禁"; daysText = "不要再用";
+  } else if (it.date) {
+    var d = dayDiff(it.date);
+    dateText = (it.approx ? "约 " : "") + it.date;
+    if (d < 0) { cls = "red"; daysText = "已过期 " + (-d) + " 天"; }
+    else if (d === 0) { cls = "red"; daysText = "今天到期"; }
+    else if (d <= 7) { cls = "red"; daysText = "剩 " + d + " 天"; }
+    else if (d <= 30) { cls = "yellow"; daysText = "剩 " + d + " 天"; }
+    else { cls = "green"; daysText = "剩 " + d + " 天"; }
+  } else {
+    cls = "grey"; dateText = "无固定到期"; daysText = "长期";
+  }
+  card.className = "card " + cls;
+  card.innerHTML = "<h2></h2><p class='desc'></p><div class='meta'><span class='date'></span><span class='days'></span></div>";
+  card.querySelector("h2").textContent = it.name;
+  card.querySelector(".desc").textContent = it.desc;
+  card.querySelector(".date").textContent = dateText;
+  card.querySelector(".days").textContent = daysText;
+  board.appendChild(card);
+});
+</script>
+</body>
+</html>
