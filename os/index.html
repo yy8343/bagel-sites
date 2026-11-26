@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bagel AI OS</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    overflow: hidden;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: #172033;
+    background:
+      radial-gradient(circle at 18% 18%, rgba(255,255,255,.75), transparent 28rem),
+      radial-gradient(circle at 82% 22%, rgba(255,214,165,.72), transparent 24rem),
+      linear-gradient(135deg, #dbeafe 0%, #fef3c7 48%, #fce7f3 100%);
+  }
+  .topbar {
+    position: fixed;
+    inset: 0 0 auto 0;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    background: rgba(255,255,255,.68);
+    border-bottom: 1px solid rgba(255,255,255,.8);
+    backdrop-filter: blur(18px);
+    z-index: 50;
+    font-size: 14px;
+  }
+  .brand { font-weight: 800; letter-spacing: .02em; }
+  .menu { display: flex; gap: 16px; color: #475569; }
+  .desktop {
+    position: relative;
+    height: 100vh;
+    padding: 64px 18px 96px;
+  }
+  .icons {
+    display: grid;
+    grid-template-columns: repeat(2, 92px);
+    gap: 18px 12px;
+    width: max-content;
+  }
+  .icon {
+    border: 0;
+    background: transparent;
+    color: #172033;
+    cursor: pointer;
+    font: inherit;
+    text-align: center;
+  }
+  .icon .tile {
+    width: 58px;
+    height: 58px;
+    margin: 0 auto 7px;
+    display: grid;
+    place-items: center;
+    border-radius: 16px;
+    background: rgba(255,255,255,.82);
+    box-shadow: 0 10px 28px rgba(30,41,59,.16);
+    font-size: 28px;
+  }
+  .icon span {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.55);
+    font-size: 12px;
+    font-weight: 650;
+  }
+  .window {
+    position: absolute;
+    width: min(430px, calc(100vw - 28px));
+    max-height: min(560px, calc(100vh - 150px));
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,.85);
+    border-radius: 18px;
+    background: rgba(255,255,255,.9);
+    box-shadow: 0 24px 70px rgba(15,23,42,.22);
+    backdrop-filter: blur(18px);
+  }
+  .window.hidden { display: none; }
+  .titlebar {
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px 0 14px;
+    background: rgba(248,250,252,.92);
+    border-bottom: 1px solid #e2e8f0;
+    cursor: grab;
+    user-select: none;
+    touch-action: none;
+  }
+  .titlebar:active { cursor: grabbing; }
+  .title { font-size: 14px; font-weight: 750; }
+  .close {
+    width: 26px;
+    height: 26px;
+    border: 0;
+    border-radius: 50%;
+    background: #fee2e2;
+    color: #991b1b;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+  }
+  .content {
+    padding: 18px;
+    overflow: auto;
+    max-height: calc(min(560px, calc(100vh - 150px)) - 42px);
+    line-height: 1.55;
+  }
+  .content h1 { margin: 0 0 8px; font-size: 30px; line-height: 1.05; }
+  .content h2 { margin: 0 0 10px; font-size: 20px; }
+  .content p { margin: 0 0 12px; color: #475569; }
+  .cards { display: grid; gap: 10px; }
+  .card {
+    padding: 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    background: #fff;
+  }
+  .card b { display: block; margin-bottom: 3px; }
+  .card span { color: #64748b; font-size: 14px; }
+  .button {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 9px 13px;
+    border-radius: 999px;
+    background: #172033;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .dock {
+    position: fixed;
+    left: 50%;
+    bottom: 16px;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    padding: 8px;
+    border-radius: 22px;
+    background: rgba(255,255,255,.72);
+    border: 1px solid rgba(255,255,255,.85);
+    box-shadow: 0 18px 45px rgba(15,23,42,.18);
+    backdrop-filter: blur(18px);
+    z-index: 50;
+  }
+  .dock button {
+    width: 46px;
+    height: 46px;
+    border: 0;
+    border-radius: 14px;
+    background: rgba(255,255,255,.9);
+    cursor: pointer;
+    font-size: 22px;
+  }
+  .dock button:hover, .icon:hover .tile { transform: translateY(-2px); }
+  .note {
+    position: absolute;
+    right: 18px;
+    bottom: 92px;
+    max-width: 280px;
+    padding: 14px;
+    border-radius: 16px;
+    background: rgba(255,255,255,.72);
+    color: #475569;
+    font-size: 14px;
+    line-height: 1.45;
+    box-shadow: 0 14px 36px rgba(15,23,42,.12);
+  }
+  @media (max-width: 720px) {
+    .menu span:nth-child(n+3) { display: none; }
+    .desktop { padding: 58px 12px 92px; }
+    .icons { grid-template-columns: repeat(4, 76px); gap: 12px 6px; }
+    .icon .tile { width: 50px; height: 50px; font-size: 24px; }
+    .window { left: 14px !important; }
+    .note { display: none; }
+  }
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">Bagel AI OS</div>
+    <nav class="menu" aria-label="Desktop menu">
+      <span>Tools</span>
+      <span>Prompts</span>
+      <span>Resources</span>
+      <span id="clock"></span>
+    </nav>
+  </header>
+
+  <main class="desktop" id="desktop">
+    <section class="icons" aria-label="Desktop icons">
+      <button class="icon" data-open="welcome"><div class="tile">🥯</div><span>Welcome</span></button>
+      <button class="icon" data-open="tools"><div class="tile">🧰</div><span>AI Tools</span></button>
+      <button class="icon" data-open="prompts"><div class="tile">✍️</div><span>Prompts</span></button>
+      <button class="icon" data-open="resources"><div class="tile">📚</div><span>Resources</span></button>
+    </section>
+
+    <section class="window" id="welcome" style="left: 240px; top: 96px; z-index: 4;">
+      <div class="titlebar"><div class="title">Welcome</div><button class="close" data-close="welcome" aria-label="Close Welcome">×</button></div>
+      <div class="content">
+        <h1>Bagel AI</h1>
+        <p>A small public desktop for useful AI finds: tools worth trying, prompts worth saving, and resources that save time.</p>
+        <p>Open the folders on the desktop. Drag the windows around. Everything here is public and simple.</p>
+        <a class="button" href="https://x.com/bagel8343" target="_blank" rel="noopener">Follow @bagel8343</a>
+      </div>
+    </section>
+
+    <section class="window hidden" id="tools" style="left: 320px; top: 140px; z-index: 5;">
+      <div class="titlebar"><div class="title">AI Tools</div><button class="close" data-close="tools" aria-label="Close AI Tools">×</button></div>
+      <div class="content">
+        <h2>AI Tools</h2>
+        <p>Short notes on tools that are practical, fast to test, and easy to explain.</p>
+        <div class="cards">
+          <div class="card"><b>Try first</b><span>Start with the smallest useful test before committing time.</span></div>
+          <div class="card"><b>Save the link</b><span>Good tools disappear into feeds. Keep the source and the use case together.</span></div>
+          <div class="card"><b>Watch the limits</b><span>Free tiers change. Check caps, exports, and account rules before relying on a tool.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="window hidden" id="prompts" style="left: 390px; top: 190px; z-index: 6;">
+      <div class="titlebar"><div class="title">Prompts</div><button class="close" data-close="prompts" aria-label="Close Prompts">×</button></div>
+      <div class="content">
+        <h2>Prompts</h2>
+        <p>Prompts are instructions for AI. The useful ones name the goal, the format, and the limits.</p>
+        <div class="cards">
+          <div class="card"><b>Goal first</b><span>Say what the output should help you decide or finish.</span></div>
+          <div class="card"><b>Format next</b><span>Ask for a table, checklist, draft, or short answer when that helps.</span></div>
+          <div class="card"><b>Keep it reusable</b><span>Replace names and numbers with blanks so the prompt works again.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="window hidden" id="resources" style="left: 280px; top: 240px; z-index: 7;">
+      <div class="titlebar"><div class="title">Resources</div><button class="close" data-close="resources" aria-label="Close Resources">×</button></div>
+      <div class="content">
+        <h2>Resources</h2>
+        <p>Resource posts work when they answer three questions fast: what is it, who is it for, and what should you watch out for?</p>
+        <div class="cards">
+          <div class="card"><b>Open source</b><span>Projects people can copy, remix, and learn from tend to travel well.</span></div>
+          <div class="card"><b>Guides</b><span>Step-by-step notes beat vague claims because readers can act on them.</span></div>
+          <div class="card"><b>Lists</b><span>Curated lists save time when every item has a clear use case.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="note">Tip: click an icon or dock button to open a window. Drag any title bar to move it.</aside>
+  </main>
+
+  <nav class="dock" aria-label="Dock">
+    <button data-open="welcome" aria-label="Open Welcome">🥯</button>
+    <button data-open="tools" aria-label="Open AI Tools">🧰</button>
+    <button data-open="prompts" aria-label="Open Prompts">✍️</button>
+    <button data-open="resources" aria-label="Open Resources">📚</button>
+  </nav>
+
+<script>
+  const desktop = document.getElementById('desktop');
+  const clock = document.getElementById('clock');
+  let topZ = 10;
+
+  function updateClock() {
+    clock.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+  updateClock();
+  setInterval(updateClock, 30000);
+
+  function openWindow(id) {
+    const win = document.getElementById(id);
+    if (!win) return;
+    win.classList.remove('hidden');
+    win.style.zIndex = ++topZ;
+  }
+
+  document.querySelectorAll('[data-open]').forEach((button) => {
+    button.addEventListener('click', () => openWindow(button.dataset.open));
+  });
+
+  document.querySelectorAll('[data-close]').forEach((button) => {
+    button.addEventListener('click', () => {
+      document.getElementById(button.dataset.close)?.classList.add('hidden');
+    });
+  });
+
+  document.querySelectorAll('.window').forEach((win) => {
+    const bar = win.querySelector('.titlebar');
+    let startX = 0;
+    let startY = 0;
+    let startLeft = 0;
+    let startTop = 0;
+    let dragging = false;
+
+    win.addEventListener('pointerdown', () => { win.style.zIndex = ++topZ; });
+
+    bar.addEventListener('pointerdown', (event) => {
+      if (event.target.closest('.close')) return;
+      dragging = true;
+      startX = event.clientX;
+      startY = event.clientY;
+      startLeft = win.offsetLeft;
+      startTop = win.offsetTop;
+      bar.setPointerCapture(event.pointerId);
+    });
+
+    bar.addEventListener('pointermove', (event) => {
+      if (!dragging) return;
+      const maxLeft = Math.max(0, desktop.clientWidth - win.offsetWidth);
+      const maxTop = Math.max(48, desktop.clientHeight - win.offsetHeight - 84);
+      const nextLeft = Math.min(Math.max(0, startLeft + event.clientX - startX), maxLeft);
+      const nextTop = Math.min(Math.max(48, startTop + event.clientY - startY), maxTop);
+      win.style.left = nextLeft + 'px';
+      win.style.top = nextTop + 'px';
+    });
+
+    bar.addEventListener('pointerup', () => { dragging = false; });
+    bar.addEventListener('pointercancel', () => { dragging = false; });
+  });
+</script>
+</body>
+</html>
