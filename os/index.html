@@ -5,257 +5,41 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bagel AI OS</title>
 <style>
-  * { box-sizing: border-box; }
-  html, body { height: 100%; }
-  body {
-    margin: 0;
-    overflow: hidden;
-    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    color: #172033;
-    background:
-      radial-gradient(circle at 18% 18%, rgba(255,255,255,.95), transparent 22rem),
-      radial-gradient(circle at 82% 16%, rgba(125,211,252,.8), transparent 24rem),
-      radial-gradient(circle at 72% 86%, rgba(251,191,36,.55), transparent 26rem),
-      linear-gradient(135deg, #1d4ed8 0%, #38bdf8 34%, #a7f3d0 68%, #fef3c7 100%);
-  }
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background:
-      linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
-    background-size: 44px 44px;
-    mask-image: linear-gradient(to bottom, black, transparent 78%);
-    pointer-events: none;
-  }
-  .topbar {
-    position: fixed;
-    inset: 0 0 auto 0;
-    height: 34px;
-    z-index: 200;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 14px;
-    background: rgba(255,255,255,.62);
-    border-bottom: 1px solid rgba(255,255,255,.72);
-    backdrop-filter: blur(18px) saturate(1.25);
-    font-size: 13px;
-  }
-  .top-left, .top-right { display: flex; align-items: center; gap: 16px; }
-  .brand { font-weight: 900; }
-  .topbar span { color: #334155; }
-  #clock { color: #172033; font-weight: 800; min-width: 74px; text-align: right; }
-  .desktop { position: relative; height: 100vh; padding: 52px 18px 96px; }
-  .icons {
-    display: grid;
-    grid-template-columns: repeat(2, 86px);
-    gap: 18px 10px;
-    width: max-content;
-    position: relative;
-    z-index: 2;
-  }
-  .icon { border: 0; background: transparent; color: white; cursor: pointer; font: inherit; text-align: center; text-shadow: 0 1px 8px rgba(15,23,42,.45); }
-  .icon .tile {
-    width: 56px; height: 56px; margin: 0 auto 6px; display: grid; place-items: center;
-    border-radius: 15px; background: rgba(255,255,255,.9); box-shadow: 0 12px 28px rgba(15,23,42,.22);
-    font-size: 26px; transition: transform .15s ease;
-  }
-  .icon:hover .tile { transform: translateY(-2px) scale(1.04); }
-  .icon span { display: inline-block; padding: 2px 7px; border-radius: 999px; background: rgba(15,23,42,.22); font-size: 12px; font-weight: 800; }
-  .window {
-    position: absolute;
-    width: min(560px, calc(100vw - 28px));
-    max-height: min(640px, calc(100vh - 140px));
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    border-radius: 18px;
-    background: rgba(255,255,255,.88);
-    border: 1px solid rgba(255,255,255,.9);
-    box-shadow: 0 28px 80px rgba(15,23,42,.28);
-    backdrop-filter: blur(22px) saturate(1.2);
-  }
-  .window.active { box-shadow: 0 34px 90px rgba(15,23,42,.34); }
-  .titlebar {
-    height: 42px; flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between;
-    padding: 0 12px 0 16px; background: rgba(255,255,255,.72); border-bottom: 1px solid rgba(148,163,184,.25);
-    cursor: grab; user-select: none; touch-action: none;
-  }
-  .titlebar:active { cursor: grabbing; }
-  .titlebar strong { font-size: 14px; }
-  .controls { display: flex; gap: 8px; }
-  .controls button { width: 26px; height: 26px; border: 0; border-radius: 999px; cursor: pointer; font-weight: 900; }
-  .min { background: #fef3c7; color: #92400e; }
-  .close { background: #ffe4e6; color: #9f1239; }
-  .content { overflow: auto; padding: 16px; }
-  .content h2 { margin: 0 0 8px; font-size: 24px; letter-spacing: -.02em; }
-  .content p { margin: 0 0 12px; color: #475569; line-height: 1.55; }
-  .video-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
-  .video-card { overflow: hidden; border-radius: 14px; background: white; border: 1px solid rgba(148,163,184,.25); box-shadow: 0 10px 24px rgba(15,23,42,.08); }
-  .thumb { height: 92px; display: grid; place-items: center; color: white; font-size: 28px; font-weight: 900; }
-  .video-card div:last-child { padding: 10px; }
-  .video-card strong { display: block; font-size: 13px; line-height: 1.35; }
-  .video-card span { color: #64748b; font-size: 12px; }
-  .case-list { display: grid; gap: 10px; }
-  .case { padding: 12px; border-radius: 14px; background: rgba(255,255,255,.78); border: 1px solid rgba(148,163,184,.25); }
-  .case strong { display: block; margin-bottom: 4px; }
-  .case span { color: #64748b; font-size: 13px; line-height: 1.45; }
-  .app-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; }
-  .app { padding: 12px 6px; border-radius: 14px; background: rgba(255,255,255,.78); border: 1px solid rgba(148,163,184,.25); text-align: center; }
-  .app b { display: block; font-size: 24px; margin-bottom: 5px; }
-  .app span { font-size: 12px; font-weight: 800; }
-  .xlink { display: inline-flex; margin-top: 6px; padding: 10px 14px; border-radius: 999px; background: #172033; color: white; text-decoration: none; font-weight: 900; }
-  .dock {
-    position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 200;
-    display: flex; gap: 8px; padding: 9px; border-radius: 24px;
-    background: rgba(255,255,255,.58); border: 1px solid rgba(255,255,255,.78);
-    box-shadow: 0 18px 50px rgba(15,23,42,.22); backdrop-filter: blur(20px) saturate(1.25);
-  }
-  .dock button { width: 48px; height: 48px; border: 0; border-radius: 14px; background: rgba(255,255,255,.9); cursor: pointer; font-size: 23px; box-shadow: 0 8px 20px rgba(15,23,42,.12); }
-  .dock button:hover { transform: translateY(-3px); }
-  .hidden { display: none !important; }
-  .minimized { opacity: 0; pointer-events: none; transform: translateY(18px) scale(.96); }
-  @media (max-width: 760px) {
-    body { background: linear-gradient(160deg, #0f172a 0%, #155e75 42%, #0ea5e9 72%, #facc15 130%); }
-    .topbar { height: 38px; padding: 0 12px; background: rgba(255,255,255,.5); }
-    .top-left span:not(.brand), .top-right span:first-child { display: none; }
-    .desktop { padding: 56px 16px 104px; }
-    .icons { grid-template-columns: repeat(4, minmax(0,1fr)); width: 100%; gap: 20px 8px; }
-    .icon .tile { width: 60px; height: 60px; border-radius: 16px; }
-    .window { left: 12px !important; right: 12px; width: auto; max-height: calc(100vh - 190px); }
-    #videos { top: 190px !important; }
-    #cases, #apps, #about { top: 210px !important; }
-    .video-grid { grid-template-columns: 1fr 1fr; }
-    .dock { width: calc(100vw - 24px); justify-content: space-around; bottom: 10px; border-radius: 26px; }
-    .dock button { width: 46px; height: 46px; }
-  }
+*{box-sizing:border-box}html,body{height:100%}body{margin:0;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;color:#111827;background:radial-gradient(circle at 20% 15%,#fff7ad 0,transparent 28%),radial-gradient(circle at 85% 20%,#7dd3fc 0,transparent 30%),linear-gradient(135deg,#2563eb,#06b6d4 42%,#a7f3d0 75%,#fef3c7)}
+.topbar{position:fixed;top:0;left:0;right:0;height:32px;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:rgba(255,255,255,.55);backdrop-filter:blur(18px);font-size:13px;font-weight:600}
+.desktop{position:fixed;inset:32px 0 86px;padding:18px}
+.icons{display:grid;grid-template-columns:repeat(2,86px);gap:14px;width:190px}
+.icon{border:0;background:transparent;color:white;text-align:center;font:600 12px -apple-system;cursor:pointer;text-shadow:0 1px 8px rgba(0,0,0,.35)}
+.tile{width:58px;height:58px;margin:0 auto 6px;border-radius:16px;display:grid;place-items:center;font-size:25px;background:rgba(255,255,255,.9);box-shadow:0 10px 24px rgba(0,0,0,.18)}
+.window{position:absolute;width:min(520px,calc(100vw - 28px));border-radius:18px;overflow:hidden;background:rgba(255,255,255,.92);box-shadow:0 24px 70px rgba(15,23,42,.28);border:1px solid rgba(255,255,255,.7)}
+.titlebar{height:38px;display:flex;align-items:center;gap:8px;padding:0 12px;background:rgba(248,250,252,.9);cursor:move;font-weight:700;font-size:13px}
+.dot{width:12px;height:12px;border-radius:50%;border:0;cursor:pointer}.red{background:#ff5f57}.yellow{background:#febc2e}.green{background:#28c840}
+.body{padding:14px;max-height:46vh;overflow:auto}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.card{border-radius:14px;padding:12px;background:#f8fafc;border:1px solid #e5e7eb}.thumb{height:74px;border-radius:10px;margin-bottom:8px;background:linear-gradient(135deg,#111827,#2563eb);display:grid;place-items:center;color:white;font-size:24px}.small{font-size:12px;color:#64748b;line-height:1.45}.xbtn{display:inline-block;margin-top:10px;padding:9px 14px;border-radius:999px;background:#111827;color:white;text-decoration:none;font-weight:700}
+.dock{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:60;display:flex;gap:10px;padding:10px;border-radius:24px;background:rgba(255,255,255,.55);backdrop-filter:blur(18px);box-shadow:0 18px 50px rgba(0,0,0,.2)}
+.dock button{width:52px;height:52px;border:0;border-radius:15px;background:white;font-size:24px;cursor:pointer;box-shadow:0 8px 18px rgba(0,0,0,.12)}
+@media(max-width:760px){.desktop{padding:12px}.icons{grid-template-columns:repeat(4,1fr);width:100%}.window{left:12px!important;right:12px;width:auto}.grid{grid-template-columns:1fr}.dock{max-width:calc(100vw - 16px);overflow-x:auto}}
 </style>
 </head>
 <body>
-<header class="topbar">
-  <div class="top-left"><strong class="brand">Bagel AI OS</strong><span>File</span><span>View</span><span>Window</span></div>
-  <div class="top-right"><span>Public Desktop</span><span id="clock">--:--</span></div>
-</header>
-
-<main class="desktop" id="desktop">
-  <nav class="icons" aria-label="Desktop icons">
-    <button class="icon" data-open="videos"><span class="tile">▶️</span><span>Videos</span></button>
-    <button class="icon" data-open="cases"><span class="tile">🗂️</span><span>Cases</span></button>
-    <button class="icon" data-open="apps"><span class="tile">🧰</span><span>AI Apps</span></button>
-    <button class="icon" data-open="about"><span class="tile">🥯</span><span>Bagel AI</span></button>
-    <button class="icon" data-open="apps"><span class="tile">💬</span><span>ChatGPT</span></button>
-    <button class="icon" data-open="apps"><span class="tile">✦</span><span>Claude</span></button>
-    <button class="icon" data-open="apps"><span class="tile">✧</span><span>Gemini</span></button>
-    <button class="icon" data-open="apps"><span class="tile">⌘</span><span>Cursor</span></button>
-  </nav>
-
-  <section class="window active" id="videos" style="left:230px; top:76px; z-index:30;">
-    <div class="titlebar"><strong>Videos</strong><div class="controls"><button class="min" aria-label="Minimize">−</button><button class="close" aria-label="Close">×</button></div></div>
-    <div class="content">
-      <h2>Video shelf</h2>
-      <p>Short AI finds, saved like desktop files.</p>
-      <div class="video-grid">
-        <article class="video-card"><div class="thumb" style="background:linear-gradient(135deg,#2563eb,#06b6d4)">▶</div><div><strong>Claude workflow basics</strong><span>08:24 · Tutorial</span></div></article>
-        <article class="video-card"><div class="thumb" style="background:linear-gradient(135deg,#7c3aed,#ec4899)">▶</div><div><strong>Remove the AI look</strong><span>06:12 · Image tips</span></div></article>
-        <article class="video-card"><div class="thumb" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">▶</div><div><strong>Natural AI voice</strong><span>05:48 · Audio</span></div></article>
-        <article class="video-card"><div class="thumb" style="background:linear-gradient(135deg,#059669,#84cc16)">▶</div><div><strong>Slides with AI</strong><span>07:33 · Design</span></div></article>
-        <article class="video-card"><div class="thumb" style="background:linear-gradient(135deg,#0f172a,#475569)">▶</div><div><strong>Prompt patterns</strong><span>09:05 · Prompts</span></div></article>
-        <article class="video-card"><div class="thumb" style="background:linear-gradient(135deg,#0891b2,#2563eb)">▶</div><div><strong>Video tools roundup</strong><span>06:57 · Tools</span></div></article>
-      </div>
-    </div>
-  </section>
-
-  <section class="window" id="cases" style="left:560px; top:150px; z-index:20;">
-    <div class="titlebar"><strong>Cases</strong><div class="controls"><button class="min" aria-label="Minimize">−</button><button class="close" aria-label="Close">×</button></div></div>
-    <div class="content">
-      <h2>Case files</h2>
-      <p>Small examples that show what the tools can do.</p>
-      <div class="case-list">
-        <div class="case"><strong>Portfolio OS</strong><span>A personal homepage that feels like a desktop, not a landing page.</span></div>
-        <div class="case"><strong>Prompt pack</strong><span>Reusable prompts for writing, slides, images, and research.</span></div>
-        <div class="case"><strong>Tool shelf</strong><span>Free AI tools grouped by job: video, code, search, notes.</span></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="window" id="apps" style="left:330px; top:300px; z-index:25;">
-    <div class="titlebar"><strong>AI Apps</strong><div class="controls"><button class="min" aria-label="Minimize">−</button><button class="close" aria-label="Close">×</button></div></div>
-    <div class="content">
-      <h2>App shelf</h2>
-      <p>Display only. Open the folders, look around, save what helps.</p>
-      <div class="app-grid">
-        <div class="app"><b>💬</b><span>ChatGPT</span></div>
-        <div class="app"><b>✦</b><span>Claude</span></div>
-        <div class="app"><b>✧</b><span>Gemini</span></div>
-        <div class="app"><b>◎</b><span>Perplexity</span></div>
-        <div class="app"><b>⌘</b><span>Cursor</span></div>
-        <div class="app"><b>◐</b><span>GitHub</span></div>
-        <div class="app"><b>▶</b><span>YouTube</span></div>
-        <div class="app"><b>N</b><span>Notion</span></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="window" id="about" style="left:760px; top:92px; z-index:15;">
-    <div class="titlebar"><strong>Bagel AI</strong><div class="controls"><button class="min" aria-label="Minimize">−</button><button class="close" aria-label="Close">×</button></div></div>
-    <div class="content">
-      <h2>Bagel AI</h2>
-      <p>A public desktop for useful AI finds: videos, cases, tools, prompts, and resources worth saving.</p>
-      <a class="xlink" href="https://x.com/bagel8343">Follow @bagel8343</a>
-    </div>
-  </section>
+<header class="topbar"><span>Bagel AI OS</span><span id="clock"></span></header>
+<main class="desktop">
+  <nav class="icons" aria-label="Desktop icons"></nav>
+  <section class="window" style="left:230px;top:54px;z-index:5" data-win="videos"><div class="titlebar"><button class="dot red"></button><button class="dot yellow"></button><button class="dot green"></button><span>Videos</span></div><div class="body"><div class="grid" id="videos"></div></div></section>
+  <section class="window" style="left:560px;top:150px;z-index:6" data-win="cases"><div class="titlebar"><button class="dot red"></button><button class="dot yellow"></button><button class="dot green"></button><span>Cases</span></div><div class="body"><div class="grid" id="cases"></div></div></section>
+  <section class="window" style="left:330px;top:330px;z-index:7" data-win="apps"><div class="titlebar"><button class="dot red"></button><button class="dot yellow"></button><button class="dot green"></button><span>Apps</span></div><div class="body"><p class="small">Popular tools worth saving. Display only here; follow updates on X.</p><a class="xbtn" href="https://x.com/bagel8343" target="_blank" rel="noopener">Follow @bagel8343</a></div></section>
 </main>
-
-<nav class="dock" aria-label="Dock">
-  <button data-open="about" aria-label="Bagel AI">🥯</button>
-  <button data-open="videos" aria-label="Videos">▶️</button>
-  <button data-open="cases" aria-label="Cases">🗂️</button>
-  <button data-open="apps" aria-label="AI Apps">🧰</button>
-  <button data-open="apps" aria-label="ChatGPT">💬</button>
-  <button data-open="apps" aria-label="Claude">✦</button>
-  <button data-open="apps" aria-label="Gemini">✧</button>
-</nav>
-
+<footer class="dock" aria-label="Dock"></footer>
 <script>
-  const clock = document.getElementById('clock');
-  function tick(){ clock.textContent = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}); }
-  tick(); setInterval(tick, 30000);
-
-  let z = 40;
-  const windows = [...document.querySelectorAll('.window')];
-  function focusWin(win){
-    windows.forEach(w => w.classList.remove('active'));
-    win.classList.remove('hidden','minimized');
-    win.classList.add('active');
-    win.style.zIndex = ++z;
-  }
-  document.querySelectorAll('[data-open]').forEach(btn => {
-    btn.addEventListener('click', () => focusWin(document.getElementById(btn.dataset.open)));
-  });
-  windows.forEach(win => {
-    win.addEventListener('pointerdown', () => focusWin(win));
-    win.querySelector('.close').addEventListener('click', e => { e.stopPropagation(); win.classList.add('hidden'); });
-    win.querySelector('.min').addEventListener('click', e => { e.stopPropagation(); win.classList.add('minimized'); });
-    const bar = win.querySelector('.titlebar');
-    let drag = null;
-    bar.addEventListener('pointerdown', e => {
-      if (e.target.closest('button')) return;
-      const r = win.getBoundingClientRect();
-      drag = { x: e.clientX - r.left, y: e.clientY - r.top };
-      bar.setPointerCapture(e.pointerId);
-    });
-    bar.addEventListener('pointermove', e => {
-      if (!drag) return;
-      const maxX = innerWidth - win.offsetWidth - 8;
-      const maxY = innerHeight - win.offsetHeight - 86;
-      win.style.left = Math.max(8, Math.min(maxX, e.clientX - drag.x)) + 'px';
-      win.style.top = Math.max(42, Math.min(maxY, e.clientY - drag.y)) + 'px';
-    });
-    bar.addEventListener('pointerup', () => drag = null);
-    bar.addEventListener('pointercancel', () => drag = null);
-  });
+const apps=[["ChatGPT","✦"],["Claude","◆"],["Gemini","✧"],["Perplexity","◎"],["Cursor","⌘"],["GitHub","●"],["YouTube","▶"],["Notion","N"],["Videos","▣"],["Cases","▦"]];
+const icons=document.querySelector('.icons'),dock=document.querySelector('.dock');
+apps.forEach(([name,sym])=>{const b=document.createElement('button');b.className='icon';b.innerHTML=`<span class="tile">${sym}</span>${name}`;b.onclick=()=>focusWin(name.toLowerCase());icons.appendChild(b);const d=document.createElement('button');d.textContent=sym;d.title=name;d.onclick=()=>focusWin(name.toLowerCase());dock.appendChild(d);});
+const vids=[["AI tools in 60 seconds","08:24"],["Prompt fixes that work","06:12"],["Make cleaner AI images","05:48"],["Slides without the mess","07:33"],["Research faster","09:05"],["Charts people understand","06:57"]];
+document.getElementById('videos').innerHTML=vids.map(v=>`<article class="card"><div class="thumb">▶</div><b>${v[0]}</b><div class="small">${v[1]} · Display only</div></article>`).join('');
+const cases=[["Portfolio OS","A homepage that feels like a desktop."],["Prompt Library","Saved prompts for repeat work."],["Tool Board","Free AI tools grouped by job."],["Case Gallery","Examples people can remix."]];
+document.getElementById('cases').innerHTML=cases.map(c=>`<article class="card"><b>${c[0]}</b><p class="small">${c[1]}</p></article>`).join('');
+let z=10;function focusWin(id){document.querySelectorAll('.window').forEach(w=>{if(w.dataset.win===id||id==='chatgpt'||id==='claude'||id==='gemini'||id==='perplexity'||id==='cursor'||id==='github'||id==='youtube'||id==='notion'){w.style.display='block';w.style.zIndex=++z;}})}
+document.querySelectorAll('.window').forEach(w=>{const bar=w.querySelector('.titlebar');let sx,sy,ox,oy,drag=false;bar.addEventListener('pointerdown',e=>{drag=true;sx=e.clientX;sy=e.clientY;ox=w.offsetLeft;oy=w.offsetTop;w.style.zIndex=++z;});addEventListener('pointermove',e=>{if(drag){w.style.left=Math.max(0,ox+e.clientX-sx)+'px';w.style.top=Math.max(0,oy+e.clientY-sy)+'px';}});addEventListener('pointerup',()=>drag=false);w.querySelector('.red').onclick=()=>w.style.display='none';w.querySelector('.yellow').onclick=()=>w.style.display='none';});
+function tick(){document.getElementById('clock').textContent=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});}tick();setInterval(tick,30000);
 </script>
 </body>
 </html>
