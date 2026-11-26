@@ -13,34 +13,36 @@
     font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     color: #172033;
     background:
-      radial-gradient(circle at 18% 18%, rgba(255,255,255,.75), transparent 28rem),
-      radial-gradient(circle at 82% 22%, rgba(255,214,165,.72), transparent 24rem),
+      radial-gradient(circle at 16% 14%, rgba(255,255,255,.85), transparent 26rem),
+      radial-gradient(circle at 84% 18%, rgba(255,214,165,.75), transparent 24rem),
+      radial-gradient(circle at 70% 88%, rgba(191,219,254,.7), transparent 26rem),
       linear-gradient(135deg, #dbeafe 0%, #fef3c7 48%, #fce7f3 100%);
   }
   .topbar {
     position: fixed;
     inset: 0 0 auto 0;
-    height: 42px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 16px;
-    background: rgba(255,255,255,.68);
-    border-bottom: 1px solid rgba(255,255,255,.8);
+    background: rgba(255,255,255,.7);
+    border-bottom: 1px solid rgba(255,255,255,.85);
     backdrop-filter: blur(18px);
-    z-index: 50;
+    z-index: 100;
     font-size: 14px;
   }
-  .brand { font-weight: 800; letter-spacing: .02em; }
-  .menu { display: flex; gap: 16px; color: #475569; }
+  .brand { font-weight: 850; letter-spacing: .02em; }
+  .menu { display: flex; align-items: center; gap: 16px; color: #475569; }
+  #clock { min-width: 76px; text-align: right; color: #172033; font-weight: 700; }
   .desktop {
     position: relative;
     height: 100vh;
-    padding: 64px 18px 96px;
+    padding: 66px 18px 104px;
   }
   .icons {
     display: grid;
-    grid-template-columns: repeat(2, 92px);
+    grid-template-columns: repeat(2, 94px);
     gap: 18px 12px;
     width: max-content;
   }
@@ -59,73 +61,67 @@
     display: grid;
     place-items: center;
     border-radius: 16px;
-    background: rgba(255,255,255,.82);
+    background: rgba(255,255,255,.84);
     box-shadow: 0 10px 28px rgba(30,41,59,.16);
-    font-size: 28px;
+    font-size: 27px;
+    transition: transform .16s ease;
   }
   .icon span {
     display: inline-block;
     padding: 2px 7px;
     border-radius: 999px;
-    background: rgba(255,255,255,.55);
+    background: rgba(255,255,255,.58);
     font-size: 12px;
-    font-weight: 650;
+    font-weight: 700;
   }
   .window {
     position: absolute;
-    width: min(430px, calc(100vw - 28px));
-    max-height: min(560px, calc(100vh - 150px));
+    width: min(520px, calc(100vw - 28px));
+    max-height: min(620px, calc(100vh - 154px));
     overflow: hidden;
-    border: 1px solid rgba(255,255,255,.85);
+    border: 1px solid rgba(255,255,255,.88);
     border-radius: 18px;
-    background: rgba(255,255,255,.9);
+    background: rgba(255,255,255,.92);
     box-shadow: 0 24px 70px rgba(15,23,42,.22);
     backdrop-filter: blur(18px);
   }
-  .window.hidden { display: none; }
+  .window.wide { width: min(680px, calc(100vw - 28px)); }
+  .window.hidden, .window.minimized { display: none; }
   .titlebar {
-    height: 42px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 12px 0 14px;
-    background: rgba(248,250,252,.92);
+    padding: 0 10px 0 14px;
+    background: rgba(248,250,252,.94);
     border-bottom: 1px solid #e2e8f0;
     cursor: grab;
     user-select: none;
     touch-action: none;
   }
   .titlebar:active { cursor: grabbing; }
-  .title { font-size: 14px; font-weight: 750; }
-  .close {
-    width: 26px;
-    height: 26px;
+  .title { font-size: 14px; font-weight: 800; }
+  .controls { display: flex; gap: 6px; }
+  .controls button {
+    width: 27px;
+    height: 27px;
     border: 0;
     border-radius: 50%;
-    background: #fee2e2;
-    color: #991b1b;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 15px;
     line-height: 1;
   }
+  .minimize { background: #fef3c7; color: #92400e; }
+  .close { background: #fee2e2; color: #991b1b; }
   .content {
     padding: 18px;
     overflow: auto;
-    max-height: calc(min(560px, calc(100vh - 150px)) - 42px);
+    max-height: calc(min(620px, calc(100vh - 154px)) - 44px);
     line-height: 1.55;
   }
-  .content h1 { margin: 0 0 8px; font-size: 30px; line-height: 1.05; }
-  .content h2 { margin: 0 0 10px; font-size: 20px; }
+  .content h1 { margin: 0 0 8px; font-size: 32px; line-height: 1.05; }
+  .content h2 { margin: 0 0 10px; font-size: 21px; }
   .content p { margin: 0 0 12px; color: #475569; }
-  .cards { display: grid; gap: 10px; }
-  .card {
-    padding: 12px;
-    border: 1px solid #e2e8f0;
-    border-radius: 14px;
-    background: #fff;
-  }
-  .card b { display: block; margin-bottom: 3px; }
-  .card span { color: #64748b; font-size: 14px; }
   .button {
     display: inline-block;
     margin-top: 6px;
@@ -134,9 +130,29 @@
     background: #172033;
     color: #fff;
     text-decoration: none;
-    font-weight: 700;
+    font-weight: 750;
     font-size: 14px;
   }
+  .video-grid, .case-grid, .cards { display: grid; gap: 12px; }
+  .video-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .video-card, .case-card, .card {
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    background: #fff;
+    overflow: hidden;
+  }
+  .thumb {
+    aspect-ratio: 16 / 9;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, #172033, #475569);
+    color: #fff;
+    font-size: 34px;
+  }
+  .video-card .body, .case-card, .card { padding: 12px; }
+  .video-card b, .case-card b, .card b { display: block; margin-bottom: 4px; }
+  .video-card span, .case-card span, .card span { color: #64748b; font-size: 14px; }
+  .meta { display: flex; justify-content: space-between; gap: 8px; color: #94a3b8; font-size: 12px; margin-top: 8px; }
   .dock {
     position: fixed;
     left: 50%;
@@ -144,32 +160,47 @@
     transform: translateX(-50%);
     display: flex;
     gap: 8px;
+    max-width: calc(100vw - 20px);
+    overflow-x: auto;
     padding: 8px;
     border-radius: 22px;
-    background: rgba(255,255,255,.72);
-    border: 1px solid rgba(255,255,255,.85);
+    background: rgba(255,255,255,.74);
+    border: 1px solid rgba(255,255,255,.88);
     box-shadow: 0 18px 45px rgba(15,23,42,.18);
     backdrop-filter: blur(18px);
-    z-index: 50;
+    z-index: 100;
   }
   .dock button {
+    position: relative;
+    flex: 0 0 auto;
     width: 46px;
     height: 46px;
     border: 0;
     border-radius: 14px;
-    background: rgba(255,255,255,.9);
+    background: rgba(255,255,255,.92);
     cursor: pointer;
-    font-size: 22px;
+    font-size: 21px;
+  }
+  .dock button.active::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 4px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #172033;
+    transform: translateX(-50%);
   }
   .dock button:hover, .icon:hover .tile { transform: translateY(-2px); }
   .note {
     position: absolute;
     right: 18px;
-    bottom: 92px;
-    max-width: 280px;
+    bottom: 100px;
+    max-width: 290px;
     padding: 14px;
     border-radius: 16px;
-    background: rgba(255,255,255,.72);
+    background: rgba(255,255,255,.74);
     color: #475569;
     font-size: 14px;
     line-height: 1.45;
@@ -177,10 +208,11 @@
   }
   @media (max-width: 720px) {
     .menu span:nth-child(n+3) { display: none; }
-    .desktop { padding: 58px 12px 92px; }
+    .desktop { padding: 60px 12px 96px; }
     .icons { grid-template-columns: repeat(4, 76px); gap: 12px 6px; }
-    .icon .tile { width: 50px; height: 50px; font-size: 24px; }
+    .icon .tile { width: 50px; height: 50px; font-size: 23px; }
     .window { left: 14px !important; }
+    .video-grid { grid-template-columns: 1fr; }
     .note { display: none; }
   }
 </style>
@@ -189,9 +221,9 @@
   <header class="topbar">
     <div class="brand">Bagel AI OS</div>
     <nav class="menu" aria-label="Desktop menu">
-      <span>Tools</span>
-      <span>Prompts</span>
-      <span>Resources</span>
+      <span>Videos</span>
+      <span>Cases</span>
+      <span>Apps</span>
       <span id="clock"></span>
     </nav>
   </header>
@@ -199,122 +231,101 @@
   <main class="desktop" id="desktop">
     <section class="icons" aria-label="Desktop icons">
       <button class="icon" data-open="welcome"><div class="tile">🥯</div><span>Welcome</span></button>
+      <button class="icon" data-open="videos"><div class="tile">▶</div><span>Videos</span></button>
+      <button class="icon" data-open="cases"><div class="tile">▦</div><span>Cases</span></button>
       <button class="icon" data-open="tools"><div class="tile">🧰</div><span>AI Tools</span></button>
-      <button class="icon" data-open="prompts"><div class="tile">✍️</div><span>Prompts</span></button>
-      <button class="icon" data-open="resources"><div class="tile">📚</div><span>Resources</span></button>
       <button class="icon" data-open="chatgpt"><div class="tile">◎</div><span>ChatGPT</span></button>
       <button class="icon" data-open="claude"><div class="tile">✳</div><span>Claude</span></button>
       <button class="icon" data-open="gemini"><div class="tile">✦</div><span>Gemini</span></button>
       <button class="icon" data-open="perplexity"><div class="tile">⌕</div><span>Perplexity</span></button>
       <button class="icon" data-open="cursor"><div class="tile">▣</div><span>Cursor</span></button>
       <button class="icon" data-open="github"><div class="tile">●</div><span>GitHub</span></button>
-      <button class="icon" data-open="youtube"><div class="tile">▶</div><span>YouTube</span></button>
+      <button class="icon" data-open="youtube"><div class="tile">▷</div><span>YouTube</span></button>
       <button class="icon" data-open="notion"><div class="tile">N</div><span>Notion</span></button>
     </section>
 
-    <section class="window" id="welcome" style="left: 240px; top: 96px; z-index: 4;">
-      <div class="titlebar"><div class="title">Welcome</div><button class="close" data-close="welcome" aria-label="Close Welcome">×</button></div>
+    <section class="window" id="welcome" style="left: 250px; top: 96px; z-index: 4;">
+      <div class="titlebar"><div class="title">Welcome</div><div class="controls"><button class="minimize" data-minimize="welcome" aria-label="Minimize Welcome">–</button><button class="close" data-close="welcome" aria-label="Close Welcome">×</button></div></div>
       <div class="content">
         <h1>Bagel AI</h1>
-        <p>A small public desktop for useful AI finds: tools worth trying, prompts worth saving, and resources that save time.</p>
-        <p>Open the folders on the desktop. Drag the windows around. Everything here is public and simple.</p>
+        <p>A small public desktop for useful AI finds: videos, cases, tools, prompts, and resources worth saving.</p>
+        <p>Open the folders, drag the windows, minimize what you do not need. Everything here is public and simple.</p>
         <a class="button" href="https://x.com/bagel8343" target="_blank" rel="noopener">Follow @bagel8343</a>
       </div>
     </section>
 
-    <section class="window hidden" id="tools" style="left: 320px; top: 140px; z-index: 5;">
-      <div class="titlebar"><div class="title">AI Tools</div><button class="close" data-close="tools" aria-label="Close AI Tools">×</button></div>
+    <section class="window wide hidden" id="videos" style="left: 300px; top: 120px; z-index: 5;">
+      <div class="titlebar"><div class="title">Videos</div><div class="controls"><button class="minimize" data-minimize="videos" aria-label="Minimize Videos">–</button><button class="close" data-close="videos" aria-label="Close Videos">×</button></div></div>
+      <div class="content">
+        <h2>Videos</h2>
+        <p>Short walkthrough ideas for AI tools, prompts, and everyday workflows.</p>
+        <div class="video-grid">
+          <article class="video-card"><div class="thumb">▶</div><div class="body"><b>AI tools in 5 minutes</b><span>What to try first, what to skip, and where the free tier ends.</span><div class="meta"><span>Guide</span><span>05:00</span></div></div></article>
+          <article class="video-card"><div class="thumb">▶</div><div class="body"><b>Prompts that save time</b><span>Reusable prompts for drafts, summaries, and checklists.</span><div class="meta"><span>Prompts</span><span>06:30</span></div></div></article>
+          <article class="video-card"><div class="thumb">▶</div><div class="body"><b>Open-source finds</b><span>Projects people can copy, remix, and learn from.</span><div class="meta"><span>Resources</span><span>07:15</span></div></div></article>
+          <article class="video-card"><div class="thumb">▶</div><div class="body"><b>AI for daily work</b><span>Small workflows for notes, planning, and quick decisions.</span><div class="meta"><span>Workflow</span><span>04:45</span></div></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="window wide hidden" id="cases" style="left: 340px; top: 150px; z-index: 6;">
+      <div class="titlebar"><div class="title">Cases</div><div class="controls"><button class="minimize" data-minimize="cases" aria-label="Minimize Cases">–</button><button class="close" data-close="cases" aria-label="Close Cases">×</button></div></div>
+      <div class="content">
+        <h2>Cases</h2>
+        <p>Small examples of AI resources turned into something people can use.</p>
+        <div class="case-grid">
+          <article class="case-card"><b>Portfolio as a desktop</b><span>A personal homepage that feels like an operating system: icons, windows, and a dock.</span></article>
+          <article class="case-card"><b>Resource list with use cases</b><span>Every tool gets one job, one audience, and one caveat.</span></article>
+          <article class="case-card"><b>Prompt pack</b><span>Prompts grouped by task so readers can save and reuse them later.</span></article>
+          <article class="case-card"><b>Tool test notes</b><span>Short tests that show the result before asking anyone to sign up.</span></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="window hidden" id="tools" style="left: 380px; top: 180px; z-index: 7;">
+      <div class="titlebar"><div class="title">AI Tools</div><div class="controls"><button class="minimize" data-minimize="tools" aria-label="Minimize AI Tools">–</button><button class="close" data-close="tools" aria-label="Close AI Tools">×</button></div></div>
       <div class="content">
         <h2>AI Tools</h2>
-        <p>Short notes on tools that are practical, fast to test, and easy to explain.</p>
+        <p>Practical tools, fast tests, and clear limits.</p>
         <div class="cards">
-          <div class="card"><b>Try first</b><span>Start with the smallest useful test before committing time.</span></div>
-          <div class="card"><b>Save the link</b><span>Good tools disappear into feeds. Keep the source and the use case together.</span></div>
-          <div class="card"><b>Watch the limits</b><span>Free tiers change. Check caps, exports, and account rules before relying on a tool.</span></div>
+          <div class="card"><b>Try first</b><span>Start with the smallest useful test.</span></div>
+          <div class="card"><b>Save the source</b><span>Keep the link and the use case together.</span></div>
+          <div class="card"><b>Watch the limits</b><span>Free tiers change. Check caps before relying on a tool.</span></div>
         </div>
       </div>
     </section>
 
-    <section class="window hidden" id="prompts" style="left: 390px; top: 190px; z-index: 6;">
-      <div class="titlebar"><div class="title">Prompts</div><button class="close" data-close="prompts" aria-label="Close Prompts">×</button></div>
-      <div class="content">
-        <h2>Prompts</h2>
-        <p>Prompts are instructions for AI. The useful ones name the goal, the format, and the limits.</p>
-        <div class="cards">
-          <div class="card"><b>Goal first</b><span>Say what the output should help you decide or finish.</span></div>
-          <div class="card"><b>Format next</b><span>Ask for a table, checklist, draft, or short answer when that helps.</span></div>
-          <div class="card"><b>Keep it reusable</b><span>Replace names and numbers with blanks so the prompt works again.</span></div>
-        </div>
-      </div>
-    </section>
+    <section class="window hidden" id="chatgpt" style="left: 330px; top: 120px; z-index: 8;"><div class="titlebar"><div class="title">ChatGPT</div><div class="controls"><button class="minimize" data-minimize="chatgpt" aria-label="Minimize ChatGPT">–</button><button class="close" data-close="chatgpt" aria-label="Close ChatGPT">×</button></div></div><div class="content"><h2>ChatGPT</h2><p>Drafting, brainstorming, summaries, and quick rewrites.</p><div class="cards"><div class="card"><b>Best for</b><span>Turning rough notes into clear first drafts.</span></div></div></div></section>
+    <section class="window hidden" id="claude" style="left: 360px; top: 150px; z-index: 9;"><div class="titlebar"><div class="title">Claude</div><div class="controls"><button class="minimize" data-minimize="claude" aria-label="Minimize Claude">–</button><button class="close" data-close="claude" aria-label="Close Claude">×</button></div></div><div class="content"><h2>Claude</h2><p>Long documents, careful reasoning, and calm writing help.</p><div class="cards"><div class="card"><b>Best for</b><span>Reading long material and shaping it into a plan.</span></div></div></div></section>
+    <section class="window hidden" id="gemini" style="left: 390px; top: 180px; z-index: 10;"><div class="titlebar"><div class="title">Gemini</div><div class="controls"><button class="minimize" data-minimize="gemini" aria-label="Minimize Gemini">–</button><button class="close" data-close="gemini" aria-label="Close Gemini">×</button></div></div><div class="content"><h2>Gemini</h2><p>Multimodal help for text, images, research, and everyday questions.</p><div class="cards"><div class="card"><b>Best for</b><span>Comparing options and explaining topics plainly.</span></div></div></div></section>
+    <section class="window hidden" id="perplexity" style="left: 300px; top: 210px; z-index: 11;"><div class="titlebar"><div class="title">Perplexity</div><div class="controls"><button class="minimize" data-minimize="perplexity" aria-label="Minimize Perplexity">–</button><button class="close" data-close="perplexity" aria-label="Close Perplexity">×</button></div></div><div class="content"><h2>Perplexity</h2><p>Search-style answers with sources you can check.</p><div class="cards"><div class="card"><b>Best for</b><span>Fast research when citations matter.</span></div></div></div></section>
+    <section class="window hidden" id="cursor" style="left: 330px; top: 240px; z-index: 12;"><div class="titlebar"><div class="title">Cursor</div><div class="controls"><button class="minimize" data-minimize="cursor" aria-label="Minimize Cursor">–</button><button class="close" data-close="cursor" aria-label="Close Cursor">×</button></div></div><div class="content"><h2>Cursor</h2><p>An AI editor for building and fixing code with context.</p><div class="cards"><div class="card"><b>Best for</b><span>Small prototypes, refactors, and debugging.</span></div></div></div></section>
+    <section class="window hidden" id="github" style="left: 360px; top: 270px; z-index: 13;"><div class="titlebar"><div class="title">GitHub</div><div class="controls"><button class="minimize" data-minimize="github" aria-label="Minimize GitHub">–</button><button class="close" data-close="github" aria-label="Close GitHub">×</button></div></div><div class="content"><h2>GitHub</h2><p>Open-source projects, code history, and remixable tools.</p><div class="cards"><div class="card"><b>Best for</b><span>Finding projects people can copy and improve.</span></div></div></div></section>
+    <section class="window hidden" id="youtube" style="left: 390px; top: 300px; z-index: 14;"><div class="titlebar"><div class="title">YouTube</div><div class="controls"><button class="minimize" data-minimize="youtube" aria-label="Minimize YouTube">–</button><button class="close" data-close="youtube" aria-label="Close YouTube">×</button></div></div><div class="content"><h2>YouTube</h2><p>Tutorials, demos, reviews, and visual walkthroughs.</p><div class="cards"><div class="card"><b>Best for</b><span>Seeing a tool in action before trying it.</span></div></div></div></section>
+    <section class="window hidden" id="notion" style="left: 420px; top: 330px; z-index: 15;"><div class="titlebar"><div class="title">Notion</div><div class="controls"><button class="minimize" data-minimize="notion" aria-label="Minimize Notion">–</button><button class="close" data-close="notion" aria-label="Close Notion">×</button></div></div><div class="content"><h2>Notion</h2><p>Notes, lists, docs, and light project tracking.</p><div class="cards"><div class="card"><b>Best for</b><span>Saving resources with the use case attached.</span></div></div></div></section>
 
-    <section class="window hidden" id="resources" style="left: 280px; top: 240px; z-index: 7;">
-      <div class="titlebar"><div class="title">Resources</div><button class="close" data-close="resources" aria-label="Close Resources">×</button></div>
-      <div class="content">
-        <h2>Resources</h2>
-        <p>Resource posts work when they answer three questions fast: what is it, who is it for, and what should you watch out for?</p>
-        <div class="cards">
-          <div class="card"><b>Open source</b><span>Projects people can copy, remix, and learn from tend to travel well.</span></div>
-          <div class="card"><b>Guides</b><span>Step-by-step notes beat vague claims because readers can act on them.</span></div>
-          <div class="card"><b>Lists</b><span>Curated lists save time when every item has a clear use case.</span></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="window hidden" id="chatgpt" style="left: 340px; top: 120px; z-index: 8;">
-      <div class="titlebar"><div class="title">ChatGPT</div><button class="close" data-close="chatgpt" aria-label="Close ChatGPT">×</button></div>
-      <div class="content"><h2>ChatGPT</h2><p>Everyday drafting, brainstorming, summaries, and quick rewrites.</p><div class="cards"><div class="card"><b>Best for</b><span>Turning rough notes into clear first drafts.</span></div></div></div>
-    </section>
-
-    <section class="window hidden" id="claude" style="left: 370px; top: 150px; z-index: 9;">
-      <div class="titlebar"><div class="title">Claude</div><button class="close" data-close="claude" aria-label="Close Claude">×</button></div>
-      <div class="content"><h2>Claude</h2><p>Long documents, careful reasoning, and calm writing help.</p><div class="cards"><div class="card"><b>Best for</b><span>Reading long material and shaping it into a plan.</span></div></div></div>
-    </section>
-
-    <section class="window hidden" id="gemini" style="left: 400px; top: 180px; z-index: 10;">
-      <div class="titlebar"><div class="title">Gemini</div><button class="close" data-close="gemini" aria-label="Close Gemini">×</button></div>
-      <div class="content"><h2>Gemini</h2><p>Multimodal help for text, images, research, and everyday questions.</p><div class="cards"><div class="card"><b>Best for</b><span>Comparing options and explaining topics in plain language.</span></div></div></div>
-    </section>
-
-    <section class="window hidden" id="perplexity" style="left: 300px; top: 210px; z-index: 11;">
-      <div class="titlebar"><div class="title">Perplexity</div><button class="close" data-close="perplexity" aria-label="Close Perplexity">×</button></div>
-      <div class="content"><h2>Perplexity</h2><p>Search-style answers with sources you can check.</p><div class="cards"><div class="card"><b>Best for</b><span>Fast research when citations matter.</span></div></div></div>
-    </section>
-
-    <section class="window hidden" id="cursor" style="left: 330px; top: 240px; z-index: 12;">
-      <div class="titlebar"><div class="title">Cursor</div><button class="close" data-close="cursor" aria-label="Close Cursor">×</button></div>
-      <div class="content"><h2>Cursor</h2><p>An AI editor for building and fixing code with context.</p><div class="cards"><div class="card"><b>Best for</b><span>Small prototypes, refactors, and debugging sessions.</span></div></div></div>
-    </section>
-
-    <section class="window hidden" id="github" style="left: 360px; top: 270px; z-index: 13;">
-      <div class="titlebar"><div class="title">GitHub</div><button class="close" data-close="github" aria-label="Close GitHub">×</button></div>
-      <div class="content"><h2>GitHub</h2><p>Open-source projects, code history, and remixable tools.</p><div class="cards"><div class="card"><b>Best for</b><span>Finding projects people can copy, learn from, and improve.</span></div></div></div>
-    </section>
-
-    <section class="window hidden" id="youtube" style="left: 390px; top: 300px; z-index: 14;">
-      <div class="titlebar"><div class="title">YouTube</div><button class="close" data-close="youtube" aria-label="Close YouTube">×</button></div>
-      <div class="content"><h2>YouTube</h2><p>Tutorials, demos, reviews, and visual walkthroughs.</p><div class="cards"><div class="card"><b>Best for</b><span>Seeing a tool in action before trying it yourself.</span></div></div></div>
-    </section>
-
-    <section class="window hidden" id="notion" style="left: 420px; top: 330px; z-index: 15;">
-      <div class="titlebar"><div class="title">Notion</div><button class="close" data-close="notion" aria-label="Close Notion">×</button></div>
-      <div class="content"><h2>Notion</h2><p>Notes, lists, docs, and light project tracking in one place.</p><div class="cards"><div class="card"><b>Best for</b><span>Saving resources with the use case attached.</span></div></div></div>
-    </section>
-
-    <aside class="note">Tip: click an icon or dock button to open a window. Drag any title bar to move it.</aside>
+    <aside class="note">Tip: click an icon or dock button to open a window. Drag title bars to move windows. Use the dock to restore minimized windows.</aside>
   </main>
 
   <nav class="dock" aria-label="Dock">
     <button data-open="welcome" aria-label="Open Welcome">🥯</button>
+    <button data-open="videos" aria-label="Open Videos">▶</button>
+    <button data-open="cases" aria-label="Open Cases">▦</button>
     <button data-open="tools" aria-label="Open AI Tools">🧰</button>
-    <button data-open="prompts" aria-label="Open Prompts">✍️</button>
-    <button data-open="resources" aria-label="Open Resources">📚</button>
+    <button data-open="chatgpt" aria-label="Open ChatGPT">◎</button>
+    <button data-open="claude" aria-label="Open Claude">✳</button>
+    <button data-open="gemini" aria-label="Open Gemini">✦</button>
+    <button data-open="perplexity" aria-label="Open Perplexity">⌕</button>
+    <button data-open="cursor" aria-label="Open Cursor">▣</button>
+    <button data-open="github" aria-label="Open GitHub">●</button>
+    <button data-open="youtube" aria-label="Open YouTube">▷</button>
+    <button data-open="notion" aria-label="Open Notion">N</button>
   </nav>
 
 <script>
   const desktop = document.getElementById('desktop');
   const clock = document.getElementById('clock');
-  let topZ = 10;
+  let topZ = 20;
 
   function updateClock() {
     clock.textContent = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -322,11 +333,19 @@
   updateClock();
   setInterval(updateClock, 30000);
 
+  function syncDock() {
+    document.querySelectorAll('.dock [data-open]').forEach((button) => {
+      const win = document.getElementById(button.dataset.open);
+      button.classList.toggle('active', !!win && !win.classList.contains('hidden') && !win.classList.contains('minimized'));
+    });
+  }
+
   function openWindow(id) {
     const win = document.getElementById(id);
     if (!win) return;
-    win.classList.remove('hidden');
+    win.classList.remove('hidden', 'minimized');
     win.style.zIndex = ++topZ;
+    syncDock();
   }
 
   document.querySelectorAll('[data-open]').forEach((button) => {
@@ -336,6 +355,14 @@
   document.querySelectorAll('[data-close]').forEach((button) => {
     button.addEventListener('click', () => {
       document.getElementById(button.dataset.close)?.classList.add('hidden');
+      syncDock();
+    });
+  });
+
+  document.querySelectorAll('[data-minimize]').forEach((button) => {
+    button.addEventListener('click', () => {
+      document.getElementById(button.dataset.minimize)?.classList.add('minimized');
+      syncDock();
     });
   });
 
@@ -350,7 +377,7 @@
     win.addEventListener('pointerdown', () => { win.style.zIndex = ++topZ; });
 
     bar.addEventListener('pointerdown', (event) => {
-      if (event.target.closest('.close')) return;
+      if (event.target.closest('button')) return;
       dragging = true;
       startX = event.clientX;
       startY = event.clientY;
@@ -362,9 +389,9 @@
     bar.addEventListener('pointermove', (event) => {
       if (!dragging) return;
       const maxLeft = Math.max(0, desktop.clientWidth - win.offsetWidth);
-      const maxTop = Math.max(48, desktop.clientHeight - win.offsetHeight - 84);
+      const maxTop = Math.max(52, desktop.clientHeight - win.offsetHeight - 92);
       const nextLeft = Math.min(Math.max(0, startLeft + event.clientX - startX), maxLeft);
-      const nextTop = Math.min(Math.max(48, startTop + event.clientY - startY), maxTop);
+      const nextTop = Math.min(Math.max(52, startTop + event.clientY - startY), maxTop);
       win.style.left = nextLeft + 'px';
       win.style.top = nextTop + 'px';
     });
@@ -372,6 +399,8 @@
     bar.addEventListener('pointerup', () => { dragging = false; });
     bar.addEventListener('pointercancel', () => { dragging = false; });
   });
+
+  syncDock();
 </script>
 </body>
 </html>
