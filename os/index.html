@@ -5,41 +5,202 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bagel AI OS</title>
 <style>
-*{box-sizing:border-box}html,body{height:100%}body{margin:0;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;color:#111827;background:radial-gradient(circle at 20% 15%,#fff7ad 0,transparent 28%),radial-gradient(circle at 85% 20%,#7dd3fc 0,transparent 30%),linear-gradient(135deg,#2563eb,#06b6d4 42%,#a7f3d0 75%,#fef3c7)}
-.topbar{position:fixed;top:0;left:0;right:0;height:32px;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:rgba(255,255,255,.55);backdrop-filter:blur(18px);font-size:13px;font-weight:600}
-.desktop{position:fixed;inset:32px 0 86px;padding:18px}
-.icons{display:grid;grid-template-columns:repeat(2,86px);gap:14px;width:190px}
-.icon{border:0;background:transparent;color:white;text-align:center;font:600 12px -apple-system;cursor:pointer;text-shadow:0 1px 8px rgba(0,0,0,.35)}
-.tile{width:58px;height:58px;margin:0 auto 6px;border-radius:16px;display:grid;place-items:center;font-size:25px;background:rgba(255,255,255,.9);box-shadow:0 10px 24px rgba(0,0,0,.18)}
-.window{position:absolute;width:min(520px,calc(100vw - 28px));border-radius:18px;overflow:hidden;background:rgba(255,255,255,.92);box-shadow:0 24px 70px rgba(15,23,42,.28);border:1px solid rgba(255,255,255,.7)}
-.titlebar{height:38px;display:flex;align-items:center;gap:8px;padding:0 12px;background:rgba(248,250,252,.9);cursor:move;font-weight:700;font-size:13px}
-.dot{width:12px;height:12px;border-radius:50%;border:0;cursor:pointer}.red{background:#ff5f57}.yellow{background:#febc2e}.green{background:#28c840}
-.body{padding:14px;max-height:46vh;overflow:auto}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.card{border-radius:14px;padding:12px;background:#f8fafc;border:1px solid #e5e7eb}.thumb{height:74px;border-radius:10px;margin-bottom:8px;background:linear-gradient(135deg,#111827,#2563eb);display:grid;place-items:center;color:white;font-size:24px}.small{font-size:12px;color:#64748b;line-height:1.45}.xbtn{display:inline-block;margin-top:10px;padding:9px 14px;border-radius:999px;background:#111827;color:white;text-decoration:none;font-weight:700}
-.dock{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:60;display:flex;gap:10px;padding:10px;border-radius:24px;background:rgba(255,255,255,.55);backdrop-filter:blur(18px);box-shadow:0 18px 50px rgba(0,0,0,.2)}
-.dock button{width:52px;height:52px;border:0;border-radius:15px;background:white;font-size:24px;cursor:pointer;box-shadow:0 8px 18px rgba(0,0,0,.12)}
-@media(max-width:760px){.desktop{padding:12px}.icons{grid-template-columns:repeat(4,1fr);width:100%}.window{left:12px!important;right:12px;width:auto}.grid{grid-template-columns:1fr}.dock{max-width:calc(100vw - 16px);overflow-x:auto}}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Arial,sans-serif;color:#eef2ff;background:#040712}
+#stars{position:fixed;inset:0;width:100%;height:100%;z-index:0;background:radial-gradient(circle at 18% 12%,rgba(59,130,246,.35),transparent 34%),radial-gradient(circle at 84% 18%,rgba(168,85,247,.28),transparent 30%),radial-gradient(circle at 55% 85%,rgba(14,165,233,.18),transparent 38%),linear-gradient(180deg,#02040d 0%,#050a1d 55%,#0a1026 100%)}
+.screen{position:fixed;inset:0;z-index:2}
+.hidden{display:none!important}
+/* Lock screen */
+#lock{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;background:rgba(2,4,13,.18)}
+.lock-date{font-size:clamp(18px,3vw,28px);font-weight:600;color:#dbeafe;text-shadow:0 2px 18px rgba(0,0,0,.6)}
+.lock-time{font-size:clamp(76px,15vw,168px);line-height:.95;font-weight:800;letter-spacing:-.04em;margin:8px 0 10px;text-shadow:0 8px 40px rgba(0,0,0,.65)}
+.lock-name{font-size:clamp(22px,4vw,38px);font-weight:700;margin:0 0 8px}
+.lock-sub{color:#b6c4e6;margin:0 0 26px;font-size:15px}
+.enter{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.14);backdrop-filter:blur(14px);color:white;border-radius:999px;padding:13px 34px;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 14px 40px rgba(0,0,0,.35)}
+.enter:hover{background:rgba(255,255,255,.24)}
+.lock-hint{margin-top:18px;color:#8fa3cc;font-size:12px}
+/* Desktop */
+#desktop{display:flex;flex-direction:column}
+.topbar{height:34px;flex:0 0 34px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:rgba(5,8,20,.72);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.08);font-size:13px;z-index:20}
+.topbar .left,.topbar .right{display:flex;gap:16px;align-items:center;white-space:nowrap}
+.topbar b{font-weight:800}
+.topbar span{color:#cbd5f5}
+.stage{position:relative;flex:1;overflow:hidden;padding:18px 18px 96px}
+.files{position:absolute;left:18px;top:18px;width:300px;display:grid;grid-template-columns:repeat(3,88px);gap:16px 10px;z-index:3}
+.file{border:0;background:transparent;color:#eef2ff;cursor:pointer;text-align:center;font:600 11px/1.25 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;text-shadow:0 1px 8px rgba(0,0,0,.8);padding:0}
+.thumb{position:relative;width:76px;height:56px;margin:0 auto 6px;border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,.28);box-shadow:0 10px 24px rgba(0,0,0,.35)}
+.thumb::after{content:"▶";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:rgba(0,0,0,.55);color:white;font-size:11px;padding-left:2px}
+.t1{background:linear-gradient(135deg,#f59e0b,#ef4444)}.t2{background:linear-gradient(135deg,#22c55e,#0ea5e9)}.t3{background:linear-gradient(135deg,#a855f7,#ec4899)}.t4{background:linear-gradient(135deg,#38bdf8,#2563eb)}.t5{background:linear-gradient(135deg,#facc15,#f97316)}.t6{background:linear-gradient(135deg,#34d399,#059669)}.t7{background:linear-gradient(135deg,#f472b6,#8b5cf6)}.t8{background:linear-gradient(135deg,#93c5fd,#1d4ed8)}.t9{background:linear-gradient(135deg,#fda4af,#dc2626)}.t10{background:linear-gradient(135deg,#67e8f9,#0891b2)}.t11{background:linear-gradient(135deg,#c4b5fd,#7c3aed)}.t12{background:linear-gradient(135deg,#86efac,#16a34a)}
+.dur{position:absolute;right:4px;bottom:4px;background:rgba(0,0,0,.65);color:white;border-radius:4px;padding:1px 4px;font-size:9px}
+.window{position:absolute;border-radius:12px;overflow:hidden;background:rgba(248,250,252,.96);color:#111827;box-shadow:0 28px 80px rgba(0,0,0,.48);border:1px solid rgba(255,255,255,.45)}
+.titlebar{height:36px;display:flex;align-items:center;gap:7px;padding:0 11px;background:linear-gradient(#f8fafc,#e8edf5);border-bottom:1px solid #d8dee9;font-size:13px;font-weight:700;cursor:move;user-select:none}
+.dot{width:12px;height:12px;border-radius:50%;border:0;cursor:pointer;padding:0}.red{background:#ff5f57}.yellow{background:#febc2e}.green{background:#28c840}
+.wbody{padding:12px;max-height:52vh;overflow:auto}
+.win-finder{right:330px;top:28px;width:430px;z-index:6}
+.win-browser{right:36px;top:74px;width:380px;z-index:8}
+.win-terminal{right:360px;top:330px;width:420px;z-index:7;background:#0b1020;color:#d1fae5}
+.win-terminal .titlebar{background:#111827;color:#e5e7eb;border-bottom-color:#263244}
+.win-contacts{right:44px;top:430px;width:300px;z-index:5}
+.win-board{right:620px;top:120px;width:300px;z-index:4}
+.rows{display:grid;gap:8px}.row{display:flex;align-items:center;gap:10px;padding:8px;border-radius:9px;background:white;border:1px solid #e5e7eb;font-size:13px}
+.appdot{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;color:white;font-weight:800;font-size:13px;flex:0 0 30px}
+.small{font-size:12px;color:#64748b;line-height:1.45}
+.browserbar{display:flex;gap:6px;align-items:center;background:#eef2f7;border-radius:8px;padding:6px 8px;font-size:12px;color:#475569;margin-bottom:10px}
+.phone{width:150px;height:300px;margin:4px auto;border:10px solid #111827;border-radius:34px;background:linear-gradient(180deg,#0f172a,#1e3a8a);padding:14px 10px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.2)}
+.phone-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+.phone-app{text-align:center;color:white;font-size:8px}.phone-app i{display:grid;place-items:center;width:34px;height:34px;margin:0 auto 3px;border-radius:9px;font-style:normal;font-weight:800;font-size:13px}
+.term{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;line-height:1.65;white-space:pre-wrap}
+.notes{display:grid;grid-template-columns:1fr 1fr;gap:9px}.note{border-radius:8px;padding:10px;font-size:12px;line-height:1.4;box-shadow:0 8px 18px rgba(0,0,0,.12)}
+.n1{background:#fef9c3}.n2{background:#dbeafe}.n3{background:#dcfce7}.n4{background:#ffe4e6}
+.dock{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:30;display:flex;gap:9px;align-items:flex-end;padding:9px 10px;border-radius:24px;background:rgba(15,23,42,.48);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.18);box-shadow:0 22px 60px rgba(0,0,0,.45);max-width:calc(100vw - 20px);overflow-x:auto}
+.dock button{width:50px;height:50px;border:0;border-radius:14px;color:white;font-weight:800;font-size:16px;cursor:pointer;box-shadow:0 10px 22px rgba(0,0,0,.28);flex:0 0 auto}
+.dock button:hover{transform:translateY(-4px) scale(1.06)}
+.cursor-label{position:absolute;z-index:15;display:flex;align-items:center;gap:4px;font-size:11px;font-weight:700;color:white;pointer-events:none;animation:float 7s ease-in-out infinite}
+.cursor-label::before{content:"";width:0;height:0;border-left:7px solid currentColor;border-top:4px solid transparent;border-bottom:4px solid transparent;transform:rotate(35deg)}
+.cursor-label span{border-radius:999px;padding:3px 8px;background:currentColor}
+.cursor-label span b{color:white;font-weight:700}
+.c1{left:38%;top:22%;color:#f97316}.c2{left:56%;top:64%;color:#22c55e;animation-delay:1.4s}.c3{left:76%;top:34%;color:#38bdf8;animation-delay:2.6s}
+@keyframes float{0%,100%{transform:translate(0,0)}50%{transform:translate(18px,-12px)}}
+.xlink{display:inline-block;margin-top:10px;background:#111827;color:white;text-decoration:none;border-radius:999px;padding:9px 14px;font-size:13px;font-weight:700}
+@media(max-width:900px){
+ .stage{overflow:auto;padding:12px 12px 92px}
+ .files{position:relative;left:auto;top:auto;width:100%;grid-template-columns:repeat(4,1fr);margin-bottom:14px}
+ .window{position:relative;right:auto!important;left:auto!important;top:auto!important;width:auto;margin:0 0 12px}
+ .cursor-label{display:none}
+ .topbar .left span:nth-child(n+3){display:none}
+}
 </style>
 </head>
 <body>
-<header class="topbar"><span>Bagel AI OS</span><span id="clock"></span></header>
-<main class="desktop">
-  <nav class="icons" aria-label="Desktop icons"></nav>
-  <section class="window" style="left:230px;top:54px;z-index:5" data-win="videos"><div class="titlebar"><button class="dot red"></button><button class="dot yellow"></button><button class="dot green"></button><span>Videos</span></div><div class="body"><div class="grid" id="videos"></div></div></section>
-  <section class="window" style="left:560px;top:150px;z-index:6" data-win="cases"><div class="titlebar"><button class="dot red"></button><button class="dot yellow"></button><button class="dot green"></button><span>Cases</span></div><div class="body"><div class="grid" id="cases"></div></div></section>
-  <section class="window" style="left:330px;top:330px;z-index:7" data-win="apps"><div class="titlebar"><button class="dot red"></button><button class="dot yellow"></button><button class="dot green"></button><span>Apps</span></div><div class="body"><p class="small">Popular tools worth saving. Display only here; follow updates on X.</p><a class="xbtn" href="https://x.com/bagel8343" target="_blank" rel="noopener">Follow @bagel8343</a></div></section>
-</main>
-<footer class="dock" aria-label="Dock"></footer>
+<canvas id="stars"></canvas>
+
+<section id="lock" class="screen">
+  <div class="lock-date" id="lockDate">Thursday, November 26</div>
+  <div class="lock-time" id="lockTime">17:09</div>
+  <h1 class="lock-name">Bagel AI</h1>
+  <p class="lock-sub">AI tools, prompts, and resources worth saving.</p>
+  <button class="enter" id="enterBtn">Enter</button>
+  <div class="lock-hint">Tap Enter to open the desktop</div>
+</section>
+
+<section id="desktop" class="screen hidden">
+  <header class="topbar">
+    <div class="left"><b>Bagel AI OS</b><span>Finder</span><span>File</span><span>View</span><span>Window</span><span>Help</span></div>
+    <div class="right"><span>Wi-Fi</span><span>100%</span><span id="topClock">17:09</span></div>
+  </header>
+
+  <main class="stage">
+    <nav class="files" id="files" aria-label="Video files"></nav>
+
+    <div class="cursor-label c1"><span><b>Mia</b></span></div>
+    <div class="cursor-label c2"><span><b>Ken</b></span></div>
+    <div class="cursor-label c3"><span><b>Alex</b></span></div>
+
+    <section class="window win-board" data-win="board">
+      <div class="titlebar"><button class="dot red"></button><button class="dot yellow"></button><button class="dot green"></button><span>Whiteboard</span></div>
+      <div class="wbody"><div class="notes">
+        <div class="note n1"><b>Save this</b><br>Tools people bookmark.</div>
+        <div class="note n2"><b>Try first</b><br>Free tiers with real use.</div>
+        <div class="note n3"><b>Remix</b><br>Make it your own.</div>
+        <div class="note n4"><b>Share</b><br>Send it to a friend.</div>
+      </div></div>
+    </section>
+
+    <section class="window win-finder" data-win="finder">
+      <div class="titlebar"><button class="dot red"></button><button class="dot yellow"></button><button class="dot green"></button><span>Finder — Documents</span></div>
+      <div class="wbody">
+        <div class="rows" id="appRows"></div>
+        <p class="small">Display only on this desktop. Follow new finds on X.</p>
+        <a class="xlink" href="https://x.com/bagel8343" target="_blank" rel="noopener">Follow @bagel8343 on X</a>
+      </div>
+    </section>
+
+    <section class="window win-browser" data-win="browser">
+      <div class="titlebar"><button class="dot red"></button><button class="dot yellow"></button><button class="dot green"></button><span>Browser</span></div>
+      <div class="wbody">
+        <div class="browserbar"><span>●</span><span>bagel-ai-os / mobile preview</span></div>
+        <div class="phone"><div style="color:white;font-weight:800;text-align:center">Bagel AI</div><div class="phone-grid" id="phoneGrid"></div></div>
+        <p class="small" style="text-align:center">Phone preview — same tools, smaller screen.</p>
+      </div>
+    </section>
+
+    <section class="window win-terminal" data-win="terminal">
+      <div class="titlebar"><button class="dot red"></button><button class="dot yellow"></button><button class="dot green"></button><span>Terminal</span></div>
+      <div class="wbody"><div class="term">$ bagel --today
+Found: 8 tools worth saving
+ChatGPT · Claude · Gemini
+Perplexity · Cursor · GitHub
+YouTube · Notion
+
+Status: display only
+Next: post the best one on X</div></div>
+    </section>
+
+    <section class="window win-contacts" data-win="contacts">
+      <div class="titlebar"><button class="dot red"></button><button class="dot yellow"></button><button class="dot green"></button><span>Contacts</span></div>
+      <div class="wbody"><div class="rows">
+        <div class="row"><span class="appdot" style="background:#111827">B</span><span><b>Bagel AI</b><br><span class="small">AI tools and resources</span></span></div>
+        <div class="row"><span class="appdot" style="background:#000">X</span><span><b>@bagel8343</b><br><span class="small">Daily finds on X</span></span></div>
+      </div></div>
+    </section>
+  </main>
+
+  <footer class="dock" id="dock" aria-label="Dock"></footer>
+</section>
+
 <script>
-const apps=[["ChatGPT","✦"],["Claude","◆"],["Gemini","✧"],["Perplexity","◎"],["Cursor","⌘"],["GitHub","●"],["YouTube","▶"],["Notion","N"],["Videos","▣"],["Cases","▦"]];
-const icons=document.querySelector('.icons'),dock=document.querySelector('.dock');
-apps.forEach(([name,sym])=>{const b=document.createElement('button');b.className='icon';b.innerHTML=`<span class="tile">${sym}</span>${name}`;b.onclick=()=>focusWin(name.toLowerCase());icons.appendChild(b);const d=document.createElement('button');d.textContent=sym;d.title=name;d.onclick=()=>focusWin(name.toLowerCase());dock.appendChild(d);});
-const vids=[["AI tools in 60 seconds","08:24"],["Prompt fixes that work","06:12"],["Make cleaner AI images","05:48"],["Slides without the mess","07:33"],["Research faster","09:05"],["Charts people understand","06:57"]];
-document.getElementById('videos').innerHTML=vids.map(v=>`<article class="card"><div class="thumb">▶</div><b>${v[0]}</b><div class="small">${v[1]} · Display only</div></article>`).join('');
-const cases=[["Portfolio OS","A homepage that feels like a desktop."],["Prompt Library","Saved prompts for repeat work."],["Tool Board","Free AI tools grouped by job."],["Case Gallery","Examples people can remix."]];
-document.getElementById('cases').innerHTML=cases.map(c=>`<article class="card"><b>${c[0]}</b><p class="small">${c[1]}</p></article>`).join('');
-let z=10;function focusWin(id){document.querySelectorAll('.window').forEach(w=>{if(w.dataset.win===id||id==='chatgpt'||id==='claude'||id==='gemini'||id==='perplexity'||id==='cursor'||id==='github'||id==='youtube'||id==='notion'){w.style.display='block';w.style.zIndex=++z;}})}
-document.querySelectorAll('.window').forEach(w=>{const bar=w.querySelector('.titlebar');let sx,sy,ox,oy,drag=false;bar.addEventListener('pointerdown',e=>{drag=true;sx=e.clientX;sy=e.clientY;ox=w.offsetLeft;oy=w.offsetTop;w.style.zIndex=++z;});addEventListener('pointermove',e=>{if(drag){w.style.left=Math.max(0,ox+e.clientX-sx)+'px';w.style.top=Math.max(0,oy+e.clientY-sy)+'px';}});addEventListener('pointerup',()=>drag=false);w.querySelector('.red').onclick=()=>w.style.display='none';w.querySelector('.yellow').onclick=()=>w.style.display='none';});
-function tick(){document.getElementById('clock').textContent=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});}tick();setInterval(tick,30000);
+const apps=[
+ ["ChatGPT","C","#10a37f","Chat, write, and code with AI."],
+ ["Claude","C","#d97757","Long documents and careful reasoning."],
+ ["Gemini","G","#4285f4","Google AI for search and creation."],
+ ["Perplexity","P","#20808d","Answers with sources."],
+ ["Cursor","⌘","#111827","AI editor for building software."],
+ ["GitHub","G","#24292f","Open-source projects and code."],
+ ["YouTube","▶","#ff0033","Tutorials and demos."],
+ ["Notion","N","#111827","Notes, docs, and planning."]
+];
+const videos=[
+ ["AI-tools-60s.mp4","08:24","t1"],["Prompt-fixes.mp4","06:12","t2"],["Clean-AI-images.mp4","05:48","t3"],
+ ["Slides-fast.mp4","07:33","t4"],["Research-faster.mp4","09:05","t5"],["Charts-clear.mp4","06:57","t6"],
+ ["Agents-101.mp4","07:46","t7"],["Free-AI-tools.mp4","08:11","t8"],["Study-with-AI.mp4","10:22","t9"],
+ ["Design-prompts.mp4","09:38","t10"],["Video-hooks.mp4","05:55","t11"],["Save-this.mp4","07:08","t12"]
+];
+document.getElementById('files').innerHTML=videos.map(v=>`<button class="file" type="button"><span class="thumb ${v[2]}"><span class="dur">${v[1]}</span></span>${v[0]}</button>`).join('');
+document.getElementById('appRows').innerHTML=apps.map(a=>`<div class="row"><span class="appdot" style="background:${a[2]}">${a[1]}</span><span><b>${a[0]}</b><br><span class="small">${a[3]}</span></span></div>`).join('');
+document.getElementById('phoneGrid').innerHTML=apps.map(a=>`<div class="phone-app"><i style="background:${a[2]}">${a[1]}</i>${a[0]}</div>`).join('');
+const dock=document.getElementById('dock');
+apps.forEach(a=>{const b=document.createElement('button');b.type='button';b.title=a[0];b.textContent=a[1];b.style.background=a[2];b.onclick=()=>focusWin('finder');dock.appendChild(b);});
+const xBtn=document.createElement('button');xBtn.type='button';xBtn.title='X';xBtn.textContent='X';xBtn.style.background='#000';xBtn.onclick=()=>focusWin('contacts');dock.appendChild(xBtn);
+
+let z=20;
+function focusWin(id){document.querySelectorAll('.window').forEach(w=>{if(w.dataset.win===id){w.style.display='block';w.style.zIndex=++z;}})}
+document.querySelectorAll('.window').forEach(w=>{
+ const bar=w.querySelector('.titlebar');let drag=false,sx=0,sy=0,ox=0,oy=0;
+ bar.addEventListener('pointerdown',e=>{if(e.target.classList.contains('dot'))return;drag=true;sx=e.clientX;sy=e.clientY;ox=w.offsetLeft;oy=w.offsetTop;w.style.zIndex=++z;});
+ addEventListener('pointermove',e=>{if(!drag)return;w.style.left=Math.max(0,ox+e.clientX-sx)+'px';w.style.top=Math.max(0,oy+e.clientY-sy)+'px';w.style.right='auto';});
+ addEventListener('pointerup',()=>drag=false);
+ w.querySelector('.red').onclick=()=>w.style.display='none';
+ w.querySelector('.yellow').onclick=()=>w.style.display='none';
+ w.querySelector('.green').onclick=()=>{w.style.zIndex=++z;};
+});
+document.getElementById('enterBtn').onclick=()=>{
+ document.getElementById('lock').classList.add('hidden');
+ document.getElementById('desktop').classList.remove('hidden');
+};
+function tick(){
+ const now=new Date();
+ const time=now.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',hour12:false});
+ document.getElementById('lockTime').textContent=time;
+ document.getElementById('topClock').textContent=time;
+ document.getElementById('lockDate').textContent=now.toLocaleDateString([], {weekday:'long',month:'long',day:'numeric'});
+}
+tick();setInterval(tick,20000);
+
+const canvas=document.getElementById('stars'),ctx=canvas.getContext('2d');let stars=[];
+function resize(){canvas.width=innerWidth;canvas.height=innerHeight;stars=Array.from({length:220},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.4+.3,a:Math.random()*.75+.2}));draw();}
+function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);stars.forEach(s=>{ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=`rgba(255,255,255,${s.a})`;ctx.fill();});}
+addEventListener('resize',resize);resize();
 </script>
 </body>
 </html>
