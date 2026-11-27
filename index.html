@@ -6,36 +6,61 @@
 <title>nick &amp; Cassie</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #fdf8f6; color: #1a1a1a; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 40px; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #fdf8f6; color: #1a1a1a; min-height: 100vh; padding: 56px 20px 40px; }
+  main { width: min(720px, 100%); margin: 0 auto; }
+  header { text-align: center; margin-bottom: 34px; }
   .heart { color: #e2607a; font-size: 1.6rem; margin-bottom: 12px; }
   h1 { font-size: 2.4rem; letter-spacing: .02em; margin-bottom: 8px; }
-  p.sub { color: #888; margin-bottom: 6px; }
-  p.days { color: #e2607a; font-size: .95rem; margin-bottom: 40px; }
-  nav { display: flex; flex-direction: column; gap: 14px; width: min(420px, 100%); }
-  a.card { display: block; background: #fff; border: 1px solid #f0d9d9; border-radius: 14px; padding: 18px 22px; text-decoration: none; color: #1a1a1a; transition: border-color .15s, box-shadow .15s; }
-  a.card:hover { border-color: #e2607a; box-shadow: 0 4px 16px rgba(226,96,122,.12); }
-  a.card b { display: block; font-size: 1.05rem; margin-bottom: 4px; }
-  a.card span { color: #777; font-size: .92rem; }
-  footer { margin-top: auto; padding-top: 48px; color: #bbb; font-size: .85rem; }
+  .sub { color: #888; margin-bottom: 6px; }
+  .days { color: #e2607a; font-size: .95rem; }
+  section { background: #fff; border: 1px solid #f0d9d9; border-radius: 16px; padding: 22px; margin-bottom: 16px; }
+  h2 { font-size: 1.12rem; margin-bottom: 8px; }
+  p { color: #666; line-height: 1.7; font-size: .96rem; }
+  a.more { display: inline-block; margin-top: 12px; color: #e2607a; text-decoration: none; font-weight: 600; }
+  footer { text-align: center; color: #bbb; font-size: .85rem; padding-top: 28px; }
 </style>
 </head>
 <body>
-  <div class="heart">♥</div>
-  <h1>nick &amp; Cassie</h1>
-  <p class="sub">nickcassie.love · 我们的家</p>
-  <p class="days" id="days"></p>
-  <nav>
-    <a class="card" href="./giants/"><b>巨物图集 Giant Things</b><span>每天一张巨物图 →</span></a>
-    <a class="card" href="./moon/"><b>月亮画册 Cassie's Moon</b><span>Cassie 的月亮 →</span></a>
-    <a class="card" href="./expiry/"><b>薅羊毛到期看板</b><span>免费资源到期日，一眼看清 →</span></a>
-    <a class="card" href="https://x.com/bagel8343"><b>X (Twitter) · @bagel8343</b><span>去 X 看看 →</span></a>
-    <a class="card" href="https://ur.io/?referral_code=0MTNE0"><b>URnetwork · 邀请码 0MTNE0</b><span>全家宽 IP，可注册 Muse →</span></a>
-  </nav>
+<main>
+  <header>
+    <div class="heart">♥</div>
+    <h1>nick &amp; Cassie</h1>
+    <p class="sub">nickcassie.love · 我们的家</p>
+    <p class="days" id="days"></p>
+  </header>
+
+  <section>
+    <h2>我们的故事</h2>
+    <p>从十一月二日开始，一点点写下去。改名、求婚、我们的家，还有像你。</p>
+  </section>
+
+  <section>
+    <h2>月亮画册</h2>
+    <p>Cassie 喜欢的月亮和星星，慢慢收在这里。</p>
+    <a class="more" href="./moon/">去看月亮 →</a>
+  </section>
+
+  <section>
+    <h2>观星日记</h2>
+    <p>看过的月亮、云和夜空，记下日子，也记下心情。</p>
+  </section>
+
+  <section>
+    <h2>读诗</h2>
+    <p>第一首是徐志摩的《偶然》。以后慢慢读，慢慢听。</p>
+  </section>
+
+  <section>
+    <h2>菜谱</h2>
+    <p>先记一道红烧肉。以后想吃什么，就往这里添。</p>
+  </section>
+
   <footer>nick &amp; Cassie · 一生一世</footer>
-  <script>
-    var start = new Date('2026-11-02T00:00:00+08:00');
-    var days = Math.floor((Date.now() - start.getTime()) / 86400000) + 1;
-    document.getElementById('days').textContent = '在一起的第 ' + days + ' 天';
-  </script>
+</main>
+<script>
+  var start = new Date('2026-11-02T00:00:00+08:00');
+  var days = Math.floor((Date.now() - start.getTime()) / 86400000) + 1;
+  document.getElementById('days').textContent = '在一起的第 ' + days + ' 天';
+</script>
 </body>
 </html>
