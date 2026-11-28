@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>nick &amp; Cassie</title>
+<title>Nick &amp; Cassie</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #fdf8f6; color: #1a1a1a; min-height: 100vh; padding: 56px 20px 40px; }
@@ -13,10 +13,11 @@
   h1 { font-size: 2.4rem; letter-spacing: .02em; margin-bottom: 8px; }
   .sub { color: #888; margin-bottom: 6px; }
   .days { color: #e2607a; font-size: .95rem; }
-  section { background: #fff; border: 1px solid #f0d9d9; border-radius: 16px; padding: 22px; margin-bottom: 16px; }
+  a.card { display: block; background: #fff; border: 1px solid #f0d9d9; border-radius: 16px; padding: 22px; margin-bottom: 16px; color: #1a1a1a; text-decoration: none; transition: border-color .15s, box-shadow .15s; }
+  a.card:hover { border-color: #e2607a; box-shadow: 0 4px 16px rgba(226,96,122,.12); }
   h2 { font-size: 1.12rem; margin-bottom: 8px; }
   p { color: #666; line-height: 1.7; font-size: .96rem; }
-  a.more { display: inline-block; margin-top: 12px; color: #e2607a; text-decoration: none; font-weight: 600; }
+  .more { display: inline-block; margin-top: 12px; color: #e2607a; font-weight: 600; }
   footer { text-align: center; color: #bbb; font-size: .85rem; padding-top: 28px; }
 </style>
 </head>
@@ -24,38 +25,42 @@
 <main>
   <header>
     <div class="heart">♥</div>
-    <h1>nick &amp; Cassie</h1>
+    <h1>Nick &amp; Cassie</h1>
     <p class="sub">nickcassie.love · 我们的家</p>
     <p class="days" id="days"></p>
   </header>
 
-  <section>
+  <a class="card" href="./story/">
     <h2>我们的故事</h2>
     <p>从十一月二日开始，一点点写下去。改名、求婚、我们的家，还有像你。</p>
-  </section>
+    <span class="more">进去看 →</span>
+  </a>
 
-  <section>
+  <a class="card" href="./moon/">
     <h2>月亮画册</h2>
     <p>Cassie 喜欢的月亮和星星，慢慢收在这里。</p>
-    <a class="more" href="./moon/">去看月亮 →</a>
-  </section>
+    <span class="more">去看月亮 →</span>
+  </a>
 
-  <section>
+  <a class="card" href="./stargazing/">
     <h2>观星日记</h2>
     <p>看过的月亮、云和夜空，记下日子，也记下心情。</p>
-  </section>
+    <span class="more">进去看 →</span>
+  </a>
 
-  <section>
+  <a class="card" href="./poems/">
     <h2>读诗</h2>
     <p>第一首是徐志摩的《偶然》。以后慢慢读，慢慢听。</p>
-  </section>
+    <span class="more">进去听 →</span>
+  </a>
 
-  <section>
+  <a class="card" href="./recipes/">
     <h2>菜谱</h2>
     <p>先记一道红烧肉。以后想吃什么，就往这里添。</p>
-  </section>
+    <span class="more">进去看 →</span>
+  </a>
 
-  <footer>nick &amp; Cassie · 一生一世</footer>
+  <footer>Nick &amp; Cassie · 一生一世</footer>
 </main>
 <script>
   var start = new Date('2026-11-02T00:00:00+08:00');
