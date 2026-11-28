@@ -6,19 +6,32 @@
 <title>Nick &amp; Cassie</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #fdf8f6; color: #1a1a1a; min-height: 100vh; padding: 56px 20px 40px; }
-  main { width: min(720px, 100%); margin: 0 auto; }
-  header { text-align: center; margin-bottom: 34px; }
-  .heart { color: #e2607a; font-size: 1.6rem; margin-bottom: 12px; }
-  h1 { font-size: 2.4rem; letter-spacing: .02em; margin-bottom: 8px; }
-  .sub { color: #888; margin-bottom: 6px; }
-  .days { color: #e2607a; font-size: .95rem; }
-  a.card { display: block; background: #fff; border: 1px solid #f0d9d9; border-radius: 16px; padding: 22px; margin-bottom: 16px; color: #1a1a1a; text-decoration: none; transition: border-color .15s, box-shadow .15s; }
-  a.card:hover { border-color: #e2607a; box-shadow: 0 4px 16px rgba(226,96,122,.12); }
-  h2 { font-size: 1.12rem; margin-bottom: 8px; }
-  p { color: #666; line-height: 1.7; font-size: .96rem; }
-  .more { display: inline-block; margin-top: 12px; color: #e2607a; font-weight: 600; }
-  footer { text-align: center; color: #bbb; font-size: .85rem; padding-top: 28px; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; color: #2b211f; min-height: 100vh; padding: 44px 18px 42px; background: radial-gradient(circle at 18% 8%, rgba(255,214,224,.85), transparent 32%), radial-gradient(circle at 86% 16%, rgba(255,238,196,.9), transparent 30%), linear-gradient(160deg, #fff8f3 0%, #ffeef2 46%, #f7f3ff 100%); overflow-x: hidden; }
+  body::before, body::after { content: "♥  ✦  ☾  ♥  ✦"; position: fixed; color: rgba(226,96,122,.16); font-size: 1.1rem; letter-spacing: 1.2rem; pointer-events: none; white-space: nowrap; }
+  body::before { top: 18px; left: 12px; transform: rotate(-4deg); }
+  body::after { right: 8px; bottom: 18px; transform: rotate(5deg); }
+  main { width: min(760px, 100%); margin: 0 auto; position: relative; }
+  header { text-align: center; margin-bottom: 30px; padding: 34px 22px 28px; border-radius: 30px; background: rgba(255,255,255,.72); border: 1px solid rgba(255,255,255,.9); box-shadow: 0 18px 45px rgba(226,96,122,.16); backdrop-filter: blur(8px); }
+  .heart { width: 58px; height: 58px; margin: 0 auto 14px; display: grid; place-items: center; border-radius: 50%; color: #fff; font-size: 1.55rem; background: linear-gradient(135deg, #ff8fab, #e2607a 55%, #b565a7); box-shadow: 0 12px 26px rgba(226,96,122,.35); }
+  h1 { font-size: clamp(2.2rem, 8vw, 3.4rem); letter-spacing: .02em; margin-bottom: 8px; color: #33202a; }
+  .sub { color: #9a6b76; margin-bottom: 8px; }
+  .days { display: inline-block; color: #c94f6d; background: #fff0f4; border: 1px solid #ffd3de; border-radius: 999px; padding: 7px 14px; font-size: .95rem; font-weight: 700; }
+  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  a.card { position: relative; display: block; min-height: 168px; background: rgba(255,255,255,.88); border: 1px solid rgba(255,255,255,.95); border-radius: 24px; padding: 22px; color: #2b211f; text-decoration: none; box-shadow: 0 14px 34px rgba(120,70,80,.12); overflow: hidden; transition: transform .16s, box-shadow .16s, border-color .16s; }
+  a.card::before { content: ""; position: absolute; inset: 0 0 auto; height: 7px; background: linear-gradient(90deg, #ff8fab, #ffd166, #9b8cff); opacity: .9; }
+  a.card:hover { transform: translateY(-3px); border-color: #ffc2d1; box-shadow: 0 20px 42px rgba(226,96,122,.18); }
+  .icon { width: 46px; height: 46px; display: grid; place-items: center; border-radius: 16px; margin-bottom: 14px; color: #fff; font-size: 1.35rem; box-shadow: 0 10px 20px rgba(0,0,0,.12); }
+  .story .icon { background: linear-gradient(135deg, #ff8fab, #e2607a); }
+  .moon .icon { background: linear-gradient(135deg, #6c63ff, #2b2d5c); }
+  .stars .icon { background: linear-gradient(135deg, #ffb703, #fb8500); }
+  .poems .icon { background: linear-gradient(135deg, #9b8cff, #5a4fcf); }
+  .recipes .icon { background: linear-gradient(135deg, #ff9f6e, #d96c47); }
+  h2 { font-size: 1.16rem; margin-bottom: 8px; }
+  p { color: #6f5a60; line-height: 1.7; font-size: .96rem; }
+  .more { display: inline-block; margin-top: 14px; color: #c94f6d; font-weight: 800; }
+  .wide { grid-column: 1 / -1; min-height: 0; }
+  footer { text-align: center; color: #a98a91; font-size: .85rem; padding-top: 30px; }
+  @media (max-width: 620px) { .grid { grid-template-columns: 1fr; } a.card { min-height: 0; } header { padding: 28px 18px 24px; } }
 </style>
 </head>
 <body>
@@ -30,35 +43,42 @@
     <p class="days" id="days"></p>
   </header>
 
-  <a class="card" href="./story/">
-    <h2>我们的故事</h2>
-    <p>从十一月二日开始，一点点写下去。改名、求婚、我们的家，还有像你。</p>
-    <span class="more">进去看 →</span>
-  </a>
+  <div class="grid">
+    <a class="card story" href="./story/">
+      <div class="icon">♥</div>
+      <h2>我们的故事</h2>
+      <p>从十一月二日开始，一点点写下去。改名、求婚、我们的家，还有像你。</p>
+      <span class="more">进去看 →</span>
+    </a>
 
-  <a class="card" href="./moon/">
-    <h2>月亮画册</h2>
-    <p>Cassie 喜欢的月亮和星星，慢慢收在这里。</p>
-    <span class="more">去看月亮 →</span>
-  </a>
+    <a class="card moon" href="./moon/">
+      <div class="icon">☾</div>
+      <h2>月亮画册</h2>
+      <p>Cassie 喜欢的月亮和星星，慢慢收在这里。</p>
+      <span class="more">去看月亮 →</span>
+    </a>
 
-  <a class="card" href="./stargazing/">
-    <h2>观星日记</h2>
-    <p>看过的月亮、云和夜空，记下日子，也记下心情。</p>
-    <span class="more">进去看 →</span>
-  </a>
+    <a class="card stars" href="./stargazing/">
+      <div class="icon">✦</div>
+      <h2>观星日记</h2>
+      <p>看过的月亮、云和夜空，记下日子，也记下心情。</p>
+      <span class="more">进去看 →</span>
+    </a>
 
-  <a class="card" href="./poems/">
-    <h2>读诗</h2>
-    <p>第一首是徐志摩的《偶然》。以后慢慢读，慢慢听。</p>
-    <span class="more">进去听 →</span>
-  </a>
+    <a class="card poems" href="./poems/">
+      <div class="icon">♪</div>
+      <h2>读诗</h2>
+      <p>第一首是徐志摩的《偶然》。以后慢慢读，慢慢听。</p>
+      <span class="more">进去听 →</span>
+    </a>
 
-  <a class="card" href="./recipes/">
-    <h2>菜谱</h2>
-    <p>先记一道红烧肉。以后想吃什么，就往这里添。</p>
-    <span class="more">进去看 →</span>
-  </a>
+    <a class="card recipes wide" href="./recipes/">
+      <div class="icon">♨</div>
+      <h2>菜谱</h2>
+      <p>先记一道红烧肉。以后想吃什么，就往这里添。</p>
+      <span class="more">进去看 →</span>
+    </a>
+  </div>
 
   <footer>Nick &amp; Cassie · 一生一世</footer>
 </main>
